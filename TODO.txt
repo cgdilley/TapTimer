@@ -1,0 +1,8 @@
+Apply WakeLock to AlarmPlayService, to keep screen awake while alarm is going off
+ - (Requires WakeLock permission in manifest)
+
+Add ability to export/import Prefab lists
+
+Add double-click functionality to widgets to reset them
+
+Add the ability to modify alarm settings (different ringtones, ringtone volume, etc.)

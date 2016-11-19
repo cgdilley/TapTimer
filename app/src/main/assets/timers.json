@@ -1,0 +1,11 @@
+{
+  "timers": [
+    {
+      "type": "Prefab_Timer",
+      "name": "Nap",
+      "icon": ["1F634"],
+      "duration": 900,
+      "color": "#FFFF0000"
+    }
+  ]
+}

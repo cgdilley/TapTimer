@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TapTimer - A Timer Widget App
+    Copyright (C) 2016 Dilley, Christopher
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    -->
+<resources>
+    <string name="app_name">TapTimer</string>
+
+    <string name="widget_configure">TapTimer</string>
+    <string name="prefab_configure">Configure Properties</string>
+
+    <string name="TimerWidget_Label">TapTimer</string>
+
+    <string name="ConfigActivity_ActiveHeader">Active timers:</string>
+    <string name="ConfigActivity_ButtonConfirm">Confirm</string>
+    <string name="ConfigActivity_ButtonCancel">Cancel</string>
+
+    <string name="ConfigActivity_Dialog_Title">Set widget settings</string>
+    <string name="ConfigActivity_Dialog_Confirm">Confirm</string>
+    <string name="ConfigActivity_Dialog_Cancel">Cancel</string>
+
+    <string name="TimerWidget_Config_NameLabel">Name:</string>
+    <string name="TimerWidget_Config_IconLabel">Icon:</string>
+    <string name="TimerWidget_Config_ColorLabel">Color:</string>
+    <string name="TimerWidget_Config_DurationLabel">Duration:</string>
+
+    <string name="ActiveItemConfig_ResetButtonText">Reset</string>
+
+    <string name="PrefabConfig_DeleteButtonText">Delete</string>
+
+    <string name="ColorPicker_Custom">\?</string>
+    <string name="ColorPicker_Dialog_Title">Choose custom color</string>
+    <string name="ColorPicker_Dialog_Confirm">Confirm</string>
+    <string name="ColorPicker_Dialog_Cancel">Cancel</string>
+
+    <string name="DurationSetter_HourLabel">H:</string>
+    <string name="DurationSetter_MinuteLabel">M:</string>
+    <string name="DurationSetter_SecondLabel">S:</string>
+
+    <string name="AlarmNotification_Title">TapTimer Alarm</string>
+    <string name="AlarmNotification_Message">Click to dismiss alarm.</string>
+</resources>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TapTimer - A Timer Widget App
+    Copyright (C) 2016 Dilley, Christopher
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    -->
+<merge
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:id="@+id/ColorPicker_ColorBar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        >
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/ColorPicker_UnselectedMargin"
+            android:layout_marginBottom="@dimen/ColorPicker_UnselectedMargin"
+            android:background="#800000"
+            android:clickable="true"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/ColorPicker_UnselectedMargin"
+            android:layout_marginBottom="@dimen/ColorPicker_UnselectedMargin"
+            android:background="@color/colorForest"
+            android:clickable="true"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/ColorPicker_UnselectedMargin"
+            android:layout_marginBottom="@dimen/ColorPicker_UnselectedMargin"
+            android:background="#ffa500"
+            android:clickable="true"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/ColorPicker_UnselectedMargin"
+            android:layout_marginBottom="@dimen/ColorPicker_UnselectedMargin"
+            android:background="#3b5998"
+            android:clickable="true"/>
+
+        <FrameLayout
+            android:id="@+id/ColorPicker_CustomPicker"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/ColorPicker_UnselectedMargin"
+            android:layout_marginBottom="@dimen/ColorPicker_UnselectedMargin"
+            android:background="@color/colorWhite"
+            android:clickable="true">
+
+            <View
+                android:id="@+id/ColorPicker_CustomBorder"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="2dp"/>
+            <TextView
+                android:id="@+id/ColorPicker_CustomText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:textColor="@android:color/black"
+                android:text="@string/ColorPicker_Custom"/>
+        </FrameLayout>
+
+
+    </LinearLayout>
+
+</merge>

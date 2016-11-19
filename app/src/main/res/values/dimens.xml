@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    TapTimer - A Timer Widget App
+    Copyright (C) 2016 Dilley, Christopher
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+    -->
+<resources>
+    <!-- Default screen margins, per the Android Design guidelines. -->
+    <dimen name="activity_horizontal_margin">16dp</dimen>
+    <dimen name="activity_vertical_margin">16dp</dimen>
+
+    <dimen name="widget_margin">0dp</dimen>
+    <dimen name="dialog_margin">12dp</dimen>
+
+    <dimen name="Widget_DefaultWidth">40dp</dimen>
+    <dimen name="Widget_DefaultHeight">40dp</dimen>
+    <dimen name="Widget_DefaultPadding">0dp</dimen>
+
+    <dimen name="TimerWidget_DefaultWidth">@dimen/Widget_DefaultWidth</dimen>
+    <dimen name="TimerWidget_DefaultHeight">@dimen/Widget_DefaultHeight</dimen>
+    <dimen name="TimerWidget_IndicatorThickness">4dp</dimen>
+    <dimen name="TimerWidget_Padding">0dp</dimen>
+    <dimen name="TimerWidget_IconMargin">8dp</dimen>
+
+    <dimen name="ConfigActivity_ActiveColumnBorderThickness">2dp</dimen>
+    <dimen name="ConfigActivity_ActiveColumnBorderRadius">5dp</dimen>
+    <dimen name="ConfigActivity_ActiveColumnBorderRadius_TL">0dp</dimen>
+    <dimen name="ConfigActivity_ActiveColumnBorderRadius_BL">0dp</dimen>
+    <dimen name="ConfigActivity_ActiveColumnBorderRadius_TR">5dp</dimen>
+    <dimen name="ConfigActivity_ActiveColumnBorderRadius_BR">0dp</dimen>
+    <dimen name="ConfigActivity_ActiveColumnHeaderTopMargin">5dp</dimen>
+    <dimen name="ConfigActivity_ActiveColumnMargin">3dp</dimen>
+    <dimen name="ConfigActivity_ActiveColumnHeaderTextSize">12sp</dimen>
+    <dimen name="ConfigActivity_PrefabListColumnWidth">50dp</dimen>
+    <dimen name="ConfigActivity_PrefabListVertSpacing">3dp</dimen>
+    <dimen name="ConfigActivity_PrefabListHorizSpacing">3dp</dimen>
+    <dimen name="ConfigActivity_PrefabItemWidth">55dp</dimen>
+    <dimen name="ConfigActivity_PrefabItemHeight">70dp</dimen>
+    <dimen name="ConfigActivity_PrefabItemIconMargin">10dp</dimen>
+    <dimen name="ConfigActivity_ActiveItemWidth">60dp</dimen>
+    <dimen name="ConfigActivity_ActiveItemHeight">60dp</dimen>
+    <dimen name="ConfigActivity_ActiveItemIconMargin">10dp</dimen>
+    <dimen name="ConfigActivity_ActiveItemMargin">3dp</dimen>
+
+    <dimen name="PrefabConfig_ColorPickerHeight">55dp</dimen>
+    <dimen name="PrefabConfig_RowHeight">60dp</dimen>
+
+    <dimen name="ActiveItemConfig_ColorPickerHeight">55dp</dimen>
+    <dimen name="ActiveItemConfig_RowHeight">60dp</dimen>
+
+    <dimen name="ColorPicker_Height">40dp</dimen>
+    <dimen name="ColorPicker_UnselectedMargin">4dp</dimen>
+    <dimen name="ColorPicker_CustomPickerBorder">3dp</dimen>
+
+    <dimen name="EmojiPicker_Width">60dp</dimen>
+    <dimen name="EmojiPicker_Height">60dp</dimen>
+
+
+</resources>
