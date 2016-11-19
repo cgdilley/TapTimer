@@ -29,13 +29,13 @@ Upon opening the configuration screen (either when first placing a widget, or wh
  - **Duration**:  The duration of the timer, split into hours, minutes, and seconds.
  - **Reset**:  Pressing this button will reset this timer, erasing any elapsed time on it.
  
- Pressing confirm in this property configuration window will immediately apply all settings to the widget, even if the cancel button is then pressed in the main configuration screen.
+Pressing confirm in this property configuration window will immediately apply all settings to the widget, even if the cancel button is then pressed in the main configuration screen.
 
 ## Using Pre-built Timers (Prefabs)
 
 In the main configuration screen, the right-hand side of the screen is dedicated to a list of pre-built timer settings, or **prefabs**.  By default, a 'Nap' timer is included.  Additional prefabs may be added by pressing the **'+'** icon.  This will bring up the property configuration window, similar to the window as described in the above section.  
 
-By pressing and holding (long-clicking) on existing prefab icons, this same property configuration window will pop up to all you to edit the properties of that prefab (or remove it from the list, by pressing the *'delete'* button.
+By pressing and holding (long-clicking) on existing prefab icons, this same property configuration window will pop up to allow you to edit the properties of that prefab (or remove it from the list, by pressing the *'delete'* button.
 
 Any changes to prefabs (adding, editing, or deleting) will only be saved once the *'confirm'* button is pressed.  Pressing *'cancel'* will discard these changes.
 
@@ -64,7 +64,7 @@ Upon reaching their set duration, a widget will start an alarm sound on the devi
  
 ## License
 
-	TapTimer - A Timer Widget App
+    TapTimer - A Timer Widget App
     Copyright (C) 2016 Dilley, Christopher
 
     This program is free software: you can redistribute it and/or modify
