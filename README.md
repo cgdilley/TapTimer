@@ -49,8 +49,8 @@ Upon reaching their set duration, a widget will start an alarm sound on the devi
 
 ## Features on the To-Do List
 
- - Providing more documentation in code
- - Adding Help icons for in-app instructions
+ - Provide more documentation in code
+ - Add Help icons for in-app instructions
  - Improving the alarm notification by making it persist until the alarm has been dismissed, and by adding a quick action button to the notification rather than requiring the notification itself be tapped.
  - Turning the device's screen on when the alarm goes off.
   - This will require the Android *WakeLock* permission, removing the app's status of being permission-less.
