@@ -60,15 +60,20 @@ public class ActiveItemAdapter extends ArrayAdapter<ActiveItem>
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent)
     {
+        // Get the layout inflater service
         LayoutInflater inflater =
                 (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        // Get the active item associated with the current position
         ActiveItem activeItem = objects.get(position);
 
-        View returnView = inflater.inflate(activeItem.getConfigLayoutResource(), parent, false);
+        // Inflate the layout resource associated with this active item
+        View returnView = inflater.inflate(activeItem.getConfigPreviewResource(), parent, false);
 
-        activeItem.attachDataToView(returnView);
+        // Have the active item fill in its values into the inflated view
+        activeItem.attachDataToConfigPreview(returnView);
 
+        // Return the inflated view
         return returnView;
     }
 

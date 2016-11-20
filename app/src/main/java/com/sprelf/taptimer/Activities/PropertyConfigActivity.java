@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sprelf.taptimer.Models.ActiveItem;
+import com.sprelf.taptimer.Models.Configurable;
 import com.sprelf.taptimer.Models.Prefab;
 import com.sprelf.taptimer.R;
 import com.sprelf.taptimer.Views.EmojiPickerView;
@@ -31,9 +32,9 @@ import com.sprelf.taptimer.Views.EmojiPickerView;
 /**
  * Created by Chris on 17.11.2016.
  */
-
 public class PropertyConfigActivity extends Activity
 {
+    // Field names for items in intent extras
     public static final String PREFAB_EXTRA = "PrefabExtra";
     public static final String ACTIVEITEM_EXTRA = "ActiveItemExtra";
     public static final String DELETE_PREFAB_EXTRA = "DeletePrefab";
@@ -52,6 +53,7 @@ public class PropertyConfigActivity extends Activity
         // out of the widget placement if they press the back button.
         setResult(RESULT_CANCELED);
 
+        // Check that relevant data was passed to this activity.  If not, quit immediately
         Intent intent = getIntent();
         if (intent == null || intent.getExtras() == null ||
             (!intent.getExtras().containsKey(PREFAB_EXTRA) &&
@@ -63,39 +65,30 @@ public class PropertyConfigActivity extends Activity
         {
             Bundle extras = intent.getExtras();
 
+            // If this activity was started to modify a prefab
             if (extras.containsKey(PREFAB_EXTRA))
             {
+                // Get the prefab object to modify
                 prefab = extras.getParcelable(PREFAB_EXTRA);
+
+                // If extraction failed, cancel out of activity
                 if (prefab == null)
                     finish();
                 else
-                {
-                    configView = prefab.getConfigLayout(this);
-                    emojiPickerView = prefab.identifyEmojiPickerView(configView);
-                    if (emojiPickerView != null)
-                        emojiPickerView.setActivity(this);
+                    initializeConfigurable(prefab);
 
-                    setContentView(R.layout.dialog_prefab_config);
-                    ((ViewGroup)findViewById(R.id.PrefabConfig_CustomPrefabArea))
-                            .addView(configView);
-                }
             }
+            // If this activity was started to modify an active item
             else if (extras.containsKey(ACTIVEITEM_EXTRA))
             {
+                // Get the active item object to modify
                 activeItem = extras.getParcelable(ACTIVEITEM_EXTRA);
+
+                // If extraction failed, cancel out of activity
                 if (activeItem == null)
                     finish();
                 else
-                {
-                    configView = activeItem.getConfigLayout(this);
-                    emojiPickerView = activeItem.identifyEmojiPickerView(configView);
-                    if (emojiPickerView != null)
-                        emojiPickerView.setActivity(this);
-
-                    setContentView(R.layout.dialog_activeitem_config);
-                    ((ViewGroup)findViewById(R.id.ActiveItemConfig_CustomActiveItemArea))
-                            .addView(configView);
-                }
+                    initializeConfigurable(activeItem);
             }
             else
                 finish();
@@ -104,6 +97,33 @@ public class PropertyConfigActivity extends Activity
 
     }
 
+    /** Performs all actions necessary to initialize this activity with the given Configurable.
+     *
+     * @param configurable Configurable object to initialize activity with.
+     */
+    private void initializeConfigurable(Configurable configurable)
+    {
+        // Get the configuration window layout from the prefab
+        configView = configurable.getConfigView(this);
+
+        // Have the prefab identify its EmojiPickerView, if it has any
+        emojiPickerView = configurable.identifyEmojiPickerView(configView);
+        // If the Emoji Picker exists, mark this activity as its host activity
+        // for launching the EmojiPickerActivity from
+        if (emojiPickerView != null)
+            emojiPickerView.setActivity(this);
+
+        // Apply the default prefab config layout to this activity
+        setContentView(R.layout.dialog_prefab_config);
+
+        // Add the prefab's custom config layout to this activity's layout
+        ((ViewGroup)findViewById(R.id.PrefabConfig_CustomPrefabArea))
+                .addView(configView);
+    }
+
+    /**
+     * @inheritDoc For PropertyConfigActivity, handles the result of an EmojiPickerActivity
+     */
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data)
     {
@@ -112,6 +132,8 @@ public class PropertyConfigActivity extends Activity
             switch (requestCode)
             {
                 case EmojiPickerView.RESULT_EMOJI_PICKED:
+                    // If this activity has an emoji picker view, and the returned intent contains
+                    // valid data, set the emoji picker view to the selected emoji
                     if (emojiPickerView != null &&
                         data != null &&
                         data.getExtras() != null &&
@@ -153,16 +175,19 @@ public class PropertyConfigActivity extends Activity
     {
         Intent result = new Intent();
 
+        // If editing a prefab, attach the prefab data to the intent
         if (prefab != null)
         {
             prefab.absorbConfigViewValues(configView);
             result.putExtra(PREFAB_EXTRA, prefab);
         }
+        // If editing an active item, attach the active item data to the intent
         else if (activeItem != null)
         {
             activeItem.absorbConfigViewValues(configView);
             result.putExtra(ACTIVEITEM_EXTRA, activeItem);
         }
+        // Set a success result code and pass the data back
         setResult(RESULT_OK, result);
         finish();
     }
@@ -177,17 +202,24 @@ public class PropertyConfigActivity extends Activity
         finish();
     }
 
+    /**
+     * Closes the activity, reporting success, and that the selected prefab should be deleted
+     * rather than modified.
+     */
     private void closeWithDeletion()
     {
+        // If there is no prefab, close with failure instead
         if (prefab == null)
         {
             closeWithFailure();
             return;
         }
 
+        // Build the return intent and include a marker that the prefab should be deleted
         Intent result = new Intent();
         result.putExtra(DELETE_PREFAB_EXTRA, true);
 
+        // Set a success result code and pass the data back
         setResult(RESULT_OK, result);
         finish();
     }

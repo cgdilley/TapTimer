@@ -47,10 +47,15 @@ public abstract class WidgetBase extends AppWidgetProvider
 {
     // Action descriptor for click events
     public static final String ACTION_TIMER_CLICK = "com.sprelf.taptimer.ACTION_TIMER_CLICK";
+    // Action descriptor for alarm firing events
     public static final String ACTION_ALARM_FIRE = "com.sprelf.taptimer.ACTION_ALARM_FIRE";
+    // Action descriptor for alarm stopping events
     public static final String ACTION_ALARM_STOP = "com.sprelf.taptimer.ACTION_ALARM_STOP";
 
+    // Base request code for setting alarm timers.  Widget IDs are added to this value to create
+    // unique channels.
     public static final int ALARM_REQUEST_CODE = 40000;
+    // ID for notifications
     public static final int NOTIFICATION_ID = 101;
 
     /**
@@ -125,7 +130,13 @@ public abstract class WidgetBase extends AppWidgetProvider
      */
     abstract protected int getRefreshRate(Context c);
 
+    /**
+     * Performs actions necessary to fire the alarm for this widget.
+     *
+     * @param c Context within which to perform the operation.
+     */
     abstract protected void fireAlarm(Context c);
+
 
     /**
      * Iterates through all given widget IDs and updates each member.  This is called both by
@@ -137,7 +148,8 @@ public abstract class WidgetBase extends AppWidgetProvider
      */
     @Override
     public void onUpdate(Context context, AppWidgetManager manager, int[] appWidgetIds)
-    {        // Take the time to clear all unused settings
+    {
+        // Take the time to clear all unused settings
         pruneWidgetSettings(context, manager);
 
         // There may be multiple widgets active, so update all of them
@@ -188,31 +200,43 @@ public abstract class WidgetBase extends AppWidgetProvider
 
     /**
      * @inheritDoc For TapTimer Widgets, intercepts broadcasts for forced updates, click events,
-     * and alarm events.  For forced updates, forces an update if the intent action matches the
-     * subclass's action intent name.  For click events, passes the click event along to the
-     * subclass to handle.  For alarm events, allows the subclass to trigger its alarm.
+     * and alarm events.
+     *
+     * For forced updates, forces an update if the intent action matches the subclass's action
+     * intent name.
+     *
+     * For click events, passes the click event along to the subclass to handle.
+     *
+     * For alarm firing events, allows the subclass to trigger its alarm.
+     *
+     * For alarm stopping events, stops the alarm service.
+     *
      */
     @Override
     public void onReceive(Context c, Intent intent)
     {
         super.onReceive(c, intent);
 
+        // If the intent action matches the update intent of the subclass, force an update
         if (intent.getAction().equals(getActionIntentName()))
         {
             Log.d("[Widget]", "FORCING UPDATE...");
             update(c);
             startUpdateTimer(c);
         }
+        // If the intent action represents a widget that was clicked, allow subclass to handle
         else if (intent.getAction().equals(ACTION_TIMER_CLICK))
         {
             Log.d("[Widget]", "CLICK RECEIVED.");
             respondToClick(c, intent);
         }
+        // If the intent action represents an alarm firing, allow subclass to handle
         else if (intent.getAction().equals(ACTION_ALARM_FIRE))
         {
             Log.d("[Widget]", "FIRING ALARM.");
             fireAlarm(c);
         }
+        // If the intent action represents an alarm stopping, stop the alarm
         else if (intent.getAction().equals(ACTION_ALARM_STOP))
         {
             Log.d("[Widget]", "STOPPING ALARM.");
@@ -322,17 +346,29 @@ public abstract class WidgetBase extends AppWidgetProvider
         alarmManager.cancel(pendingIntent);
     }
 
+    /**
+     * Sets the timer for activating the alarm for a particular widget.
+     *
+     * @param c        Context within which to perform the operation.
+     * @param widgetId ID of the widget to set the alarm for.
+     * @param time     The time to set the alarm to.
+     */
     protected void setAlarm(Context c, int widgetId, long time)
     {
+        // If the time is in the past, don't set anything
         if (time < System.currentTimeMillis())
             return;
 
+        // Create new pending intent that will send a broadcast indicating that the alarm should
+        // be fired.  Uses a unique channel based on the given widget ID to avoid clashes.
         Intent intent = new Intent(ACTION_ALARM_FIRE);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(c, ALARM_REQUEST_CODE + widgetId, intent,
                                            PendingIntent.FLAG_UPDATE_CURRENT);
 
+        // On versions of Android >= KitKat, sets an exact alarm.  Otherwise, sets an imprecise
+        // alarm.
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
@@ -340,8 +376,15 @@ public abstract class WidgetBase extends AppWidgetProvider
             alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
     }
 
+    /**
+     * Disables and previously set alarms, preventing them from activating.
+     *
+     * @param c        Context within which to perform the operation.
+     * @param widgetId Widget ID of the alarm to cancel
+     */
     protected void unsetAlarm(Context c, int widgetId)
     {
+        // Create pending intent to match what was set
         Intent intent = new Intent(ACTION_ALARM_FIRE);
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(c, ALARM_REQUEST_CODE + widgetId, intent,
@@ -352,25 +395,37 @@ public abstract class WidgetBase extends AppWidgetProvider
         alarmManager.cancel(pendingIntent);
     }
 
+    /**
+     * Starts the alarm service, and pushes a notification to stop it.
+     *
+     * @param c Context within which to perform the operation.
+     */
     protected void startAlarm(Context c)
     {
         Log.d("[Widget]", "Starting alarm...");
+
+        // Star the alarm service
         Intent intent = new Intent(c, AlarmPlayService.class);
         c.startService(intent);
 
+        // Create pending intent to include with the notification that will send a broadcast to
+        // disable the alarm.
         Intent notiIntent = new Intent(ACTION_ALARM_STOP);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(c, 0, notiIntent,
                                                                  PendingIntent.FLAG_UPDATE_CURRENT);
 
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(c)
-                .setSmallIcon(R.drawable.icon)
-                .setLargeIcon(BitmapFactory.decodeResource(c.getResources(), R.drawable.icon))
-                .setContentTitle(c.getString(R.string.AlarmNotification_Title))
-                .setContentText(c.getString(R.string.AlarmNotification_Message))
-                .setContentIntent(pendingIntent)
-                .setPriority(2)
-                .setAutoCancel(true);
+        // Construct the notification, attaching the above pending intent
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(c)
+                        .setSmallIcon(R.drawable.icon)
+                        .setLargeIcon(BitmapFactory.decodeResource(c.getResources(), R.drawable.icon))
+                        .setContentTitle(c.getString(R.string.AlarmNotification_Title))
+                        .setContentText(c.getString(R.string.AlarmNotification_Message))
+                        .setContentIntent(pendingIntent)
+                        .setPriority(2)
+                        .setAutoCancel(true);
 
+        // Get the notification manager, and display the notification
         NotificationManager manager =
                 (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -379,8 +434,14 @@ public abstract class WidgetBase extends AppWidgetProvider
 
     }
 
+    /**
+     * Stops the alarm service, if it is currently running.
+     *
+     * @param c Context within which to perform the operation.
+     */
     protected void stopAlarm(Context c)
     {
+        // Construct service intent and force the service to stop
         Intent intent = new Intent(c, AlarmPlayService.class);
         c.stopService(intent);
     }

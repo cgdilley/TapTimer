@@ -29,13 +29,17 @@ import java.io.IOException;
 
 /**
  * Created by Chris on 16.11.2016.
+ * Class for holding settings about a widget that may be shared among multiple independent widgets.
  */
-
-public abstract class Prefab implements Parcelable
+public abstract class Prefab implements Parcelable, Configurable
 {
+    // JSON field name for identifying Prefab type
     public static final String FIELD_TYPE = "type";
+    // JSON field name for identifying timers array
     public static final String FIELD_TIMERS = "timers";
+    // JSON value (for type field) for describing Prefab_Timer objects
     public static final String PREFAB_TIMER = "Prefab_Timer";
+
 
     /**
      * Creates a new Prefab object, holding all the same values.
@@ -53,39 +57,64 @@ public abstract class Prefab implements Parcelable
     public abstract void save(Context c, int widgetId);
 
     /**
-     * Performs the work of manipulating the view based on the contents of the associated
-     * Prefab.
-     *
-     * @param view View to manipulate.
-     */
-    public abstract void attachDataToView(View view);
-
-    /**
-     * Gets the resource identifier of the layout for rendering this Prefab object.
-     *
-     * @return Resource identifier for the rendering layout.
-     */
-    public abstract int getLayoutResource();
-
-    /**
      * Gets the duration value of this prefab.  If no such value exists, returns 0.
      *
      * @return The duration of this prefab, or 0 if this prefab doesn't have a duration.
      */
     public abstract int getDuration();
 
-    // TODO: DOCUMENT
 
-    public abstract View getConfigLayout(Context c);
-
-    public abstract void absorbConfigViewValues(View view);
-
-    public abstract EmojiPickerView identifyEmojiPickerView(View view);
-
-
+    /** Writes the contents of this Prefab into the given JSON writer.
+     *
+     * @param writer JSON writer to write Prefab data into.
+     * @throws IOException Throws IOException if any issues occur when writing.
+     */
     public abstract void writeToJSON(JsonWriter writer) throws IOException;
 
 
+    /** @inheritDoc
+     */
+    public abstract void attachDataToConfigPreview(View view);
+
+    /** @inheritDoc
+     */
+    public abstract int getConfigPreviewResource();
+
+    /** @inheritDoc
+     */
+    public abstract View getConfigView(Context c);
+
+    /** @inheritDoc
+     */
+    public abstract void absorbConfigViewValues(View view);
+
+    /** @inheritDoc
+     */
+    public abstract EmojiPickerView identifyEmojiPickerView(View view);
+
+
+
+    /** Converts the given array of hexadecimal unicode codepoints into its equivalent String.
+     *
+     * @param codepoints Array of hexadecimal unicode codepoints to convert.
+     * @return The string representation of the given codepoints.
+     */
+    protected static String parseCodepoints(String[] codepoints)
+    {
+        String iconString = "";
+        for (String codepoint : codepoints)
+        {
+            int hexVal = Integer.parseInt(codepoint, 16);
+            iconString += new String(Character.toChars(hexVal));
+        }
+        return iconString;
+    }
+
+    /** Converts the given string into its equivalent array of hexadecimal unicode codepoints.
+     *
+     * @param in String to convert.
+     * @return The hexadecimal codepoints string representation of the given string.
+     */
     protected static String[] codePointArray(String in)
     {
         String[] returnArray = new String[in.length()];
@@ -94,6 +123,12 @@ public abstract class Prefab implements Parcelable
         return returnArray;
     }
 
+    /** Cleans up garbage in an icon string to try alleviate any issues with poorly formatting
+     * icon strings.
+     *
+     * @param icon String to sanitize.
+     * @return The sanitized version of the given string.
+     */
     protected static String sanitizeIconString(String icon)
     {
         /*

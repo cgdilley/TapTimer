@@ -32,8 +32,9 @@ abstract public class BaseWidgetView extends View
 {
     protected String widgetId;
 
-
+    // Percentage that should be displayed by the widget
     protected float percentage;
+    // Whether or not the widget should fade when inactive
     protected boolean fadeIfInactive = true;
 
     public BaseWidgetView(Context c)

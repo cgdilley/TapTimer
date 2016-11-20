@@ -37,6 +37,9 @@ import java.util.Set;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * Class for handling all functionality related specifically to the Timer Widget.
+ */
 public class TimerWidget extends WidgetBase
 {
     // Action identifier for updating this widget type
@@ -64,7 +67,7 @@ public class TimerWidget extends WidgetBase
                                    int widgetId, int width, int height)
     {
         // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(c.getPackageName(), R.layout.taptimer_widget);
+        RemoteViews views = new RemoteViews(c.getPackageName(), R.layout.widget);
 
         draw(c, widgetId, views, width, height, new TimerWidgetView(c));
 
@@ -187,16 +190,18 @@ public class TimerWidget extends WidgetBase
 
         String id = Integer.toString(widgetId);
 
+        // Get objects for reading and writing shared preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor edit = prefs.edit();
 
-
+        // Get the start time and duration of this timer widget
         long startTime = prefs.getLong(TIMER_START + id, -1);
         long duration = prefs.getLong(TIMER_DURATION + id, -1);
         // If settings do not yet exist for this widget ID, cancel this operation.
         if (startTime == -1 || duration == -1)
             return;
 
+        // Get the current time
         long currTime = System.currentTimeMillis();
         // Get the pause time for this widget.  If it doesn't exist, this will be set to -1
         long pauseTime = prefs.getLong(TIMER_PAUSE + id, -1);
@@ -276,7 +281,7 @@ public class TimerWidget extends WidgetBase
         // If no time has elapsed, return 100% time remaining
         // If the full duration has elapsed, return 0% time remaining
         // Otherwise, calculate the percentage of remaining time.
-        if (timeElapsed < 0 || duration <= 0)
+        if (timeElapsed <= 0 || duration <= 0)
             return 1f;
         else if (timeElapsed > duration)
             return 0f;
@@ -321,6 +326,9 @@ public class TimerWidget extends WidgetBase
         return Collections.min(refreshRates);
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     protected void fireAlarm(Context c)
     {

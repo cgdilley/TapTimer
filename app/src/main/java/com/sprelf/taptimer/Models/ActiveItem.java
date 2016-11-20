@@ -28,25 +28,34 @@ import com.sprelf.taptimer.Views.EmojiPickerView;
  * Created by Chris on 17.11.2016.
  */
 
-public abstract class ActiveItem implements Parcelable
+public abstract class ActiveItem implements Parcelable, Configurable
 {
     protected Prefab prefab;
     protected int widgetId;
 
+    /** Getter method for this ActiveItem's prefab field.
+     */
     public Prefab getPrefab()
     {
         return prefab;
     }
 
+    /** Setter method for this ActiveItem's prefab field.
+     */
     public void setPrefab(Prefab prefab)
     {
         this.prefab = prefab;
     }
 
+    /** Getter method for this ActiveItem's widget ID field.
+     */
     public int getWidgetId()
     {
         return widgetId;
     }
+
+
+    //// ABSTRACT METHODS
 
     /** Saves the current contents of this ActiveItem object into SharedPreferences.
      *
@@ -54,28 +63,29 @@ public abstract class ActiveItem implements Parcelable
      */
     public abstract void save(Context c);
 
-    /** Gets the resource identifier of the layout for rendering this Prefab object in the config
-     * screen.
-     *
-     * @return Resource identifier for the rendering layout.
-     */
-    public abstract int getConfigLayoutResource();
-
-    /**
-     * Performs the work of manipulating the view based on the contents of this ActiveItem.
-     *
-     * @param view View to manipulate.
-     */
-    public abstract void attachDataToView(View view);
 
     /** Resets the values of this active item (eg. resetting the timer).
      *
      */
     public abstract void reset();
 
-    public abstract View getConfigLayout(Context c);
+    /** @inheritDoc
+     */
+    public abstract int getConfigPreviewResource();
 
+    /** @inheritDoc
+     */
+    public abstract void attachDataToConfigPreview(View view);
+
+    /** @inheritDoc
+     */
+    public abstract View getConfigView(Context c);
+
+    /** @inheritDoc
+     */
     public abstract EmojiPickerView identifyEmojiPickerView(View view);
 
+    /** @inheritDoc
+     */
     public abstract void absorbConfigViewValues(View view);
 }

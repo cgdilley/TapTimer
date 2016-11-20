@@ -32,14 +32,21 @@ import com.sprelf.taptimer.R;
 
 /**
  * Created by Chris on 17.11.2016.
+ * Class for managing the display of an emoji, and launching an activity to select a new emoji when
+ * tapped.
  */
 public class EmojiPickerView extends FrameLayout
 {
+    // Result code for launching EmojiPickerActivity
     public static final int RESULT_EMOJI_PICKED = 101;
+    // Field name for emojis in intent extras
     public static final String EMOJI_EXTRA = "EmojiExtra";
 
+    // Reference to button view
     private ImageButton button;
+    // String representing the currently displayed emoji icon
     private String icon;
+    // Activity to launch EmojiPickerActivity from, which will receive the result
     private Activity activity;
 
     public EmojiPickerView(Context c)
@@ -54,11 +61,17 @@ public class EmojiPickerView extends FrameLayout
         initialize();
     }
 
+    /**
+     * Getter method for the icon string represented by this EmojiPickerView.
+     */
     public String getIcon()
     {
         return icon;
     }
 
+    /**
+     * Setter method for the icon string represented by this EmojiPickerView.
+     */
     public void setIcon(String icon)
     {
         this.icon = icon;
@@ -66,17 +79,27 @@ public class EmojiPickerView extends FrameLayout
             button.setImageResource(EmojiconHandler_Custom.getIcon(getContext(), icon));
     }
 
+    /**
+     * Setter method for the activity referenced by this EmojiPickerView.
+     */
     public void setActivity(Activity activity)
     {
         this.activity = activity;
     }
 
+
+    /**
+     * Initializes the layout of the EmojiPickerView.
+     */
     private void initialize()
     {
+        // Inflate the emoji picker layout
         inflate(getContext(), R.layout.view_emojipicker, this);
 
+        // Get reference to the emoji button
         button = (ImageButton) findViewById(R.id.EmojiPicker_Button);
 
+        // Set on-click listener to launch EmojiPickerActivity through the referenced activity
         button.setOnClickListener(new OnClickListener()
         {
             @Override

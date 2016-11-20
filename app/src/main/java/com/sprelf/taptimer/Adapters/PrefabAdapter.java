@@ -62,22 +62,27 @@ public class PrefabAdapter extends ArrayAdapter<Prefab>
     @Override
     public View getView(int position, View convertView, @NonNull ViewGroup parent)
     {
+        // Get the layout inflater service
         LayoutInflater inflater =
                 (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View returnView;
+        // If we're getting any view other than the last element in the list,
+        // inflate the layout resource for the prefab and have the prefab apply its values to it
         if (position < objects.size() - 1)
         {
 
             Prefab prefab = objects.get(position);
-            returnView = inflater.inflate(prefab.getLayoutResource(), parent, false);
-            prefab.attachDataToView(returnView);
+            returnView = inflater.inflate(prefab.getConfigPreviewResource(), parent, false);
+            prefab.attachDataToConfigPreview(returnView);
         }
+        // Otherwise, if we're looking at the final element, inflate the 'add new' layout
         else
         {
             returnView = inflater.inflate(R.layout.layout_prefab_addnew, parent, false);
         }
 
+        // Return the inflated view
         return returnView;
 
     }

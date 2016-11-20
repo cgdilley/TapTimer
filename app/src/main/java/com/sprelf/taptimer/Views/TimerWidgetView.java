@@ -37,8 +37,9 @@ import com.sprelf.taptimer.Widgets.TimerWidget;
 
 /**
  * Created by Chris on 14.11.2016.
+ * Class for rendering the current status of a widget based on settings stored under a particular
+ * widget ID.
  */
-
 public class TimerWidgetView extends BaseWidgetView
 {
     private Typeface tf;

@@ -38,6 +38,14 @@ import java.io.InputStreamReader;
 
 public class JSONUtils
 {
+    /** Loads a JSON file at the given filepath in the app's file storage.  If no file is found,
+     * reads from the same path in Assets directory instead.
+     *
+     * @param c Context within which to perform the operation.
+     * @param filename Filepath to read from.
+     * @return The JSON object contained in the assets file
+     * @throws JSONException
+     */
     public static JSONObject loadJSONFile(Context c, String filename) throws JSONException
     {
         FileInputStream in;
@@ -72,7 +80,13 @@ public class JSONUtils
         return null;
     }
 
-
+    /** Loads a JSON file at the given filepath in the app's Assets directory.
+     *
+     * @param c Context within which to perform the operation.
+     * @param filename Filepath to read from.
+     * @return The JSON object contained in the assets file
+     * @throws JSONException
+     */
     public static JSONObject loadJSONAsset(Context c, String filename) throws JSONException
     {
         String returnString;

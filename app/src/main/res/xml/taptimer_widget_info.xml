@@ -18,7 +18,7 @@
     -->
 <appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
                     android:configure="com.sprelf.taptimer.Activities.ConfigActivity"
-                    android:initialLayout="@layout/taptimer_widget"
+                    android:initialLayout="@layout/widget"
                     android:minHeight="@dimen/Widget_DefaultHeight"
                     android:minWidth="@dimen/Widget_DefaultWidth"
                     android:previewImage="@drawable/icon"
