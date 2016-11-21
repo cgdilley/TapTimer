@@ -1,8 +1,6 @@
 # TapTimer 
 
-**TapTimer** is an app designed to provide a simple means of setting alarms for a particular *duration*, as opposed to setting a particular *time*.  As a user, you may place any number of TapTimer widgets to your homescreen, and modifying their properties using the app.  You may store common timer presets as well, which can be quickly applied to any active widget.
-
-[TOC]
+**TapTimer** is an Android app designed to provide a simple means of setting alarms for a particular *duration*, as opposed to setting a particular *time*.  As a user, you may place any number of TapTimer widgets to your homescreen, and modifying their properties using the app.  You may store common timer presets as well, which can be quickly applied to any active widget.
 
 ## Installing the App
 
@@ -10,11 +8,13 @@ The latest APK file can always be found in the *'/LATEST_APK'* directory.  The f
 
 Once having downloaded this file onto your Android device, launch the file to install the app.
 
+The app is designed to run on all devices 4.1 (Jelly Bean) and greater.
+
 ## Placing the Widgets
 
 The widget for this app will be found in your widget menu (which is usually found alongside your app menu), labelled *TapTimer*.  Drag the widget onto your homescreen to place the widget.  Any number of widgets may be placed in this manner.
 
-Placing a widget will open the configuration screen.  See instructions below for using this screen.  
+Placing a widget will open the configuration screen.  See instructions below for using this screen.
 This same screen may also be opened by launching the app itself, found in your app menu.  Settings for widgets may be modified at any time.  Press confirm in the screen to confirm the placement of the widget, or press cancel to cancel it's placement.
 
 *Users may find it useful to keep the app's launch icon near the widgets on their homescreen to allow for quick editing.*
@@ -51,7 +51,6 @@ Upon reaching their set duration, a widget will start an alarm sound on the devi
 
 ## Features on the To-Do List
 
- - Provide more documentation in code
  - Add Help icons for in-app instructions
  - Improving the alarm notification by making it persist until the alarm has been dismissed, and by adding a quick action button to the notification rather than requiring the notification itself be tapped.
  - Turning the device's screen on when the alarm goes off.

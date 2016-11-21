@@ -35,4 +35,5 @@
     <color name="colorIndigo">#FF4B0082</color>
 
     <color name="TimerWidget_Indicator">@color/colorWhite</color>
+    <color name="TimerWidget_Shadow">#15000000</color>
 </resources>

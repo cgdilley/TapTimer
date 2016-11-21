@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.sprelf.taptimer.Emojicon.EmojiconHandler_Custom;
 import com.sprelf.taptimer.R;
+import com.sprelf.taptimer.Utils.ColorUtils;
 import com.sprelf.taptimer.Views.ColorSwitcherView;
 import com.sprelf.taptimer.Views.DurationSetterView;
 import com.sprelf.taptimer.Views.EmojiPickerView;
@@ -240,7 +241,7 @@ public class Prefab_Timer extends Prefab
         // Apply the name to the preview, and adjust its color based on the background color
         TextView label = (TextView) groupView.findViewById(R.id.PrefabItem_Label);
         label.setText(name);
-        label.setTextColor(ColorSwitcherView.getContrastColor(color));
+        label.setTextColor(ColorUtils.getContrastColor(color));
     }
 
     /**

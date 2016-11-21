@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.rarepebble.colorpicker.ColorPickerView;
 import com.sprelf.taptimer.R;
+import com.sprelf.taptimer.Utils.ColorUtils;
 
 /*
  * TapTimer - A Timer Widget App
@@ -212,7 +213,7 @@ public class ColorSwitcherView extends FrameLayout
     public void changeCustomColor(int color)
     {
         // Calculate the appropriate contrast color for the border and the text
-        int contrastColor = getContrastColor(color);
+        int contrastColor = ColorUtils.getContrastColor(color);
 
         // Set the background color
         customPicker.setBackgroundColor(color);
@@ -256,16 +257,4 @@ public class ColorSwitcherView extends FrameLayout
         selectView(customPicker);
     }
 
-    /** Calculates the color that contrasts the given color (either black or white).
-     *
-     * @param colorToContrast Color to find the contrast of.
-     * @return Returns black if the given color's luminance is greater than 0.5, white otherwise.
-     */
-    public static int getContrastColor(int colorToContrast)
-    {
-        float[] hsv = new float[3];
-        Color.RGBToHSV(Color.red(colorToContrast), Color.green(colorToContrast),
-                       Color.blue(colorToContrast), hsv);
-        return hsv[2] > 0.5f ? Color.BLACK : Color.WHITE;
-    }
 }
