@@ -52,4 +52,5 @@
 
     <string name="AlarmNotification_Title">TapTimer Alarm</string>
     <string name="AlarmNotification_Message">Click to dismiss alarm.</string>
+    <string name="AlarmNotification_Button">DISMISS</string>
 </resources>

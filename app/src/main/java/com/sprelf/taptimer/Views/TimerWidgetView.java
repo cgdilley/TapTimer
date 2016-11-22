@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.RadialGradient;
 import android.graphics.RectF;
@@ -17,7 +18,6 @@ import android.util.Log;
 
 import com.sprelf.taptimer.Emojicon.EmojiconHandler_Custom;
 import com.sprelf.taptimer.R;
-import com.sprelf.taptimer.Utils.ColorUtils;
 import com.sprelf.taptimer.Widgets.TimerWidget;
 
 /*
@@ -46,7 +46,7 @@ import com.sprelf.taptimer.Widgets.TimerWidget;
 public class TimerWidgetView extends BaseWidgetView
 {
     private Typeface tf;
-    private Paint indicatorPaint, circlePaint;
+    private Paint indicatorPaint, circlePaint, gradientPaint;
     private RectF boundingRect;
 
     public TimerWidgetView(Context c)
@@ -72,6 +72,7 @@ public class TimerWidgetView extends BaseWidgetView
 
         indicatorPaint = new Paint();
         circlePaint = new Paint();
+        gradientPaint = new Paint();
         boundingRect = new RectF();
     }
 
@@ -135,17 +136,81 @@ public class TimerWidgetView extends BaseWidgetView
                          right - (width / 2) + radius,
                          bottom - (height / 2) + radius);
 
+        /*
+        // THIS DRAWS A GRADIENT OVER THE WHOLE CIRCLE, EXCLUDING ICON
         // Draw circle
         //circlePaint.setColor(circleColor);
         circlePaint.setShader(new RadialGradient(radialGradientXOffset,
                                                  radialGradientYOffset,
-                                                 radius*3,  // Not sure why this is *3, but it works
+                                                 radius*4,  // Not sure why this is *4, but it works
                                                  ColorUtils.getFadeColor(circleColor, 0.4f),
                                                  circleColor,
-                                                 Shader.TileMode.CLAMP));
+                                                 Shader.TileMode.MIRROR));
         circlePaint.setStyle(Paint.Style.FILL);
         circlePaint.setAntiAlias(true);
         canvas.drawOval(boundingRect, circlePaint);
+        //*/
+
+
+        //*
+        // Draw circle
+        circlePaint.setColor(circleColor);
+        circlePaint.setStyle(Paint.Style.FILL);
+        circlePaint.setAntiAlias(true);
+        canvas.drawOval(boundingRect, circlePaint);
+        //*
+        gradientPaint.setShader(new RadialGradient(radialGradientXOffset,
+                                                 radialGradientYOffset,
+                                                 radius * 4,
+                                                 Color.parseColor("#66FFFFFF"),
+                                                 Color.parseColor("#22000000"),
+                                                 Shader.TileMode.MIRROR));
+        gradientPaint.setStyle(Paint.Style.FILL);
+        gradientPaint.setAntiAlias(true);
+        canvas.drawOval(boundingRect, gradientPaint);
+        //*/
+
+        // Define the bounding rectangle for the icon
+        boundingRect.set(left + (width / 2) - radius + iconMargin,
+                         top + (height / 2) - radius + iconMargin,
+                         right - (width / 2) + radius - iconMargin,
+                         bottom - (height / 2) + radius - iconMargin);
+        // Draw icon
+        try
+        {
+            Bitmap bmp = ((BitmapDrawable) getContext().getResources()
+                                                       .getDrawable(icon)).getBitmap();
+            canvas.drawBitmap(bmp, null, boundingRect, null);
+        } catch (Resources.NotFoundException e)
+        {
+            Log.d("[WidgetView]", "Icon not found.");
+        }
+
+
+        /*
+        // THIS DRAWS A GRADIENT OVER THE WHOLE CIRCLE, INCLUDING ICON
+        // Define the bounding rectangle for the circle
+        boundingRect.set(left + (width / 2) - radius,
+                         top + (height / 2) - radius,
+                         right - (width / 2) + radius,
+                         bottom - (height / 2) + radius);
+        circlePaint.setShader(new RadialGradient(radialGradientXOffset,
+                                                 radialGradientYOffset,
+                                                 radius * 4,
+                                                 Color.parseColor("#66FFFFFF"),
+                                                 Color.parseColor("#00FFFFFF"),
+                                                 Shader.TileMode.CLAMP));
+        canvas.drawOval(boundingRect, circlePaint);
+        //*/
+
+
+
+
+
+
+
+
+
 
         // Define the bounding rectangle for the arc
         boundingRect.set(left + (width / 2) - radius + (indicatorThickness / 2),
@@ -181,21 +246,7 @@ public class TimerWidgetView extends BaseWidgetView
 
 
 
-        // Define the bounding rectangle for the icon
-        boundingRect.set(left + (width / 2) - radius + iconMargin,
-                         top + (height / 2) - radius + iconMargin,
-                         right - (width / 2) + radius - iconMargin,
-                         bottom - (height / 2) + radius - iconMargin);
-        // Draw icon
-        try
-        {
-            Bitmap bmp = ((BitmapDrawable) getContext().getResources()
-                                                       .getDrawable(icon)).getBitmap();
-            canvas.drawBitmap(bmp, null, boundingRect, null);
-        } catch (Resources.NotFoundException e)
-        {
-            Log.d("[WidgetView]", "Icon not found.");
-        }
+
 
         // If the view should fade when inactive, and is inactive, draw a fade filter over it
         if (fadeIfInactive && prefs.contains(TimerWidget.TIMER_PAUSE + widgetId))

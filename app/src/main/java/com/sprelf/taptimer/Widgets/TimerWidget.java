@@ -230,8 +230,6 @@ public class TimerWidget extends WidgetBase
         // Forcing synchronous commit to ensure values are changed before rendering update
         edit.commit();
 
-        Log.d("[Widget]", "Preferences:  " + prefs.getAll().toString());
-
         // Force an update and restart timer for future updates
         update(c);
         startUpdateTimer(c);
@@ -306,6 +304,7 @@ public class TimerWidget extends WidgetBase
         // Add the idle rate as a baseline to fall back on if no widgets exist
         refreshRates.add(idleRate);
 
+        long currTime = System.currentTimeMillis();
         // Iterate through the IDs of all active timer widgets
         for (int widgetId : AppWidgetManager.getInstance(c).getAppWidgetIds(
                 new ComponentName(c, TimerWidget.class)))
@@ -315,9 +314,10 @@ public class TimerWidget extends WidgetBase
             if (!prefs.contains(TimerWidget.TIMER_PAUSE + id))
             {
                 // Get the duration of the timer, and add its optimal refresh rate based on its
-                // duration to the list of refresh rates.
+                // duration to the list of refresh rates, if it hasn't already expired.
                 long duration = prefs.getLong(TimerWidget.TIMER_DURATION + id, 0);
-                if (duration > 0)
+                long startTime = prefs.getLong(TimerWidget.TIMER_START + id, 0);
+                if (duration > 0 && startTime > 0 && (currTime - startTime) < duration)
                     refreshRates.add((int) Math.max(duration * REFRESH_RATE_RATIO, minimumRate));
             }
         }

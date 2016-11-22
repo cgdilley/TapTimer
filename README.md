@@ -47,14 +47,12 @@ Once the widgets have been placed and configured, simply tapping the widgets on 
 
 Widgets will update semi-infrequently, depending on the duration of the timer.  This is so that the timers do not significantly impact the performance of the device.
 
-Upon reaching their set duration, a widget will start an alarm sound on the device, using the device's default alarm settings.  These alarms will go off whether the device is awake or not.  The alarm will continue until dismissed, either by tapping any widget, or by tapping the notification pop-up.  This notification may be used to dismiss the alarm while the device is still locked, if notifications may be shown in the lock screen.
+Upon reaching their set duration, a widget will start an alarm sound on the device, using the device's default alarm settings.  These alarms will go off whether the device is awake or not.  The alarm will continue until dismissed, either by tapping any widget, or by tapping the notification pop-up.  This notification may be used to dismiss the alarm while the device is still locked, if notifications may be shown in the lock screen.  To display the dismiss button in the lock screen, you may have to swipe down on the notification area.
 
 ## Features on the To-Do List
 
- - Add Help icons for in-app instructions
- - Improving the alarm notification by making it persist until the alarm has been dismissed, and by adding a quick action button to the notification rather than requiring the notification itself be tapped.
- - Turning the device's screen on when the alarm goes off.
-  - This will require the Android *WakeLock* permission, removing the app's status of being permission-less.
+ - Implementing custom notification layout that allows ability to tap notification while in lock screen without unlocking.
+ - Adding Help icons for in-app instructions
  - Adding the ability to modify alarm settings (different ringtones, ringtone volume, etc.)
  - Adding the ability to import/export lists of prefabs (or even synching online)
  - Adding double-click functionality to widgets to reset them more easily

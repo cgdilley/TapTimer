@@ -18,15 +18,25 @@
 
 package com.sprelf.taptimer.Services;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
+import android.os.PowerManager;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.sprelf.taptimer.R;
+
+import static com.sprelf.taptimer.Widgets.WidgetBase.ACTION_ALARM_STOP;
 
 /*
  * TapTimer - A Timer Widget App
@@ -51,14 +61,29 @@ import android.util.Log;
  */
 public class AlarmPlayService extends Service
 {
+    // ID for notifications
+    public static final int NOTIFICATION_ID = 101;
+
+    public static final String WAKELOCK_TAG = "ALARM_WAKELOCK";
+
     // Custom ASyncTask for handling loading and managing of alarm's MediaPlayer object
     AudioTask task;
+
+    PowerManager.WakeLock wakeLock;
 
     /** @inheritDoc
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
+
+        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+
+        wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
+                                  PowerManager.ACQUIRE_CAUSES_WAKEUP, WAKELOCK_TAG);
+        if (wakeLock != null)
+            wakeLock.acquire();
+
         // Initialize new audio task ASync object
         task = new AudioTask();
 
@@ -85,6 +110,9 @@ public class AlarmPlayService extends Service
         {
             Log.d("[AlarmService]", "Executing alarm...");
             task.execute(alert);
+
+            // Open the notification for dismissing the alarm
+            openNotification(this);
         }
 
         return super.onStartCommand(intent, flags, startId);
@@ -99,6 +127,12 @@ public class AlarmPlayService extends Service
         task.stop();
         task.cancel(true);
 
+        if (wakeLock != null)
+            wakeLock.release();
+
+        // Close the persistent notification
+        closeNotification(this);
+
         super.onDestroy();
     }
 
@@ -111,6 +145,59 @@ public class AlarmPlayService extends Service
         // TODO: Return the communication channel to the service.
         throw new UnsupportedOperationException("Not yet implemented");
     }
+
+    /** Opens a persistent notification that provides a button to allow a user to stop the alarm.
+     *
+     * @param c Context within which to perform the operation.
+     */
+    private static void openNotification(Context c)
+    {
+
+        // Create pending intent to include with the notification that will send a broadcast to
+        // disable the alarm.
+        Intent notiIntent = new Intent(ACTION_ALARM_STOP);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(c, 0, notiIntent,
+                                                                 PendingIntent.FLAG_UPDATE_CURRENT);
+
+        // Construct the notification, attaching the above pending intent
+        NotificationCompat.Builder builder =
+                new NotificationCompat.Builder(c)
+                        .setSmallIcon(R.drawable.icon)
+                        .setLargeIcon(BitmapFactory.decodeResource(c.getResources(), R.drawable.icon))
+                        .setContentTitle(c.getString(R.string.AlarmNotification_Title))
+                        .setContentText(c.getString(R.string.AlarmNotification_Message))
+                        //.setContentIntent(pendingIntent)
+                        .addAction(android.R.drawable.ic_menu_close_clear_cancel,
+                                   c.getString(R.string.AlarmNotification_Button),
+                                   pendingIntent)
+                        .setPriority(2)
+                        .setOngoing(true)
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
+
+        // Get the notification manager, and display the notification
+        NotificationManager manager =
+                (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        manager.notify(NOTIFICATION_ID, builder.build());
+    }
+
+    /** Closes the persistent alarm dismissal notification.
+     *
+     * @param c Context within which to perform the operation.
+     */
+    private static void closeNotification(Context c)
+    {
+        NotificationManager manager =
+                (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        manager.cancel(NOTIFICATION_ID);
+    }
+
+
+
+
+
+
 
 
     /** Custom AsyncTask object for managing the alarm's media player.

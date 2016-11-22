@@ -19,6 +19,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.sprelf.taptimer">
 
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/icon"
@@ -32,17 +34,9 @@
             android:label="@string/TimerWidget_Label">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE"/>
-            </intent-filter>
-            <intent-filter>
                 <action android:name="com.sprelf.taptimer.ACTION_UPDATE_TIMER"/>
-            </intent-filter>
-            <intent-filter>
                 <action android:name="com.sprelf.taptimer.ACTION_TIMER_CLICK"/>
-            </intent-filter>
-            <intent-filter>
                 <action android:name="com.sprelf.taptimer.ACTION_ALARM_FIRE"/>
-            </intent-filter>
-            <intent-filter>
                 <action android:name="com.sprelf.taptimer.ACTION_ALARM_STOP"/>
             </intent-filter>
 

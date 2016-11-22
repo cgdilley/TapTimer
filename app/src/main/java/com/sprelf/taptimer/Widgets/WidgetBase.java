@@ -1,23 +1,20 @@
 package com.sprelf.taptimer.Widgets;
 
 import android.app.AlarmManager;
-import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.RemoteViews;
 
-import com.sprelf.taptimer.Services.AlarmPlayService;
 import com.sprelf.taptimer.R;
+import com.sprelf.taptimer.Services.AlarmPlayService;
 import com.sprelf.taptimer.Views.BaseWidgetView;
 
 /*
@@ -55,8 +52,6 @@ public abstract class WidgetBase extends AppWidgetProvider
     // Base request code for setting alarm timers.  Widget IDs are added to this value to create
     // unique channels.
     public static final int ALARM_REQUEST_CODE = 40000;
-    // ID for notifications
-    public static final int NOTIFICATION_ID = 101;
 
     /**
      * Creates the {@link RemoteViews} object, renders the widget onto it, and triggers a
@@ -404,34 +399,9 @@ public abstract class WidgetBase extends AppWidgetProvider
     {
         Log.d("[Widget]", "Starting alarm...");
 
-        // Star the alarm service
+        // Start the alarm service
         Intent intent = new Intent(c, AlarmPlayService.class);
         c.startService(intent);
-
-        // Create pending intent to include with the notification that will send a broadcast to
-        // disable the alarm.
-        Intent notiIntent = new Intent(ACTION_ALARM_STOP);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(c, 0, notiIntent,
-                                                                 PendingIntent.FLAG_UPDATE_CURRENT);
-
-        // Construct the notification, attaching the above pending intent
-        NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(c)
-                        .setSmallIcon(R.drawable.icon)
-                        .setLargeIcon(BitmapFactory.decodeResource(c.getResources(), R.drawable.icon))
-                        .setContentTitle(c.getString(R.string.AlarmNotification_Title))
-                        .setContentText(c.getString(R.string.AlarmNotification_Message))
-                        .setContentIntent(pendingIntent)
-                        .setPriority(2)
-                        .setAutoCancel(true);
-
-        // Get the notification manager, and display the notification
-        NotificationManager manager =
-                (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        manager.notify(NOTIFICATION_ID, builder.build());
-
-
     }
 
     /**

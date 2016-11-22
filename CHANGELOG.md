@@ -1,3 +1,15 @@
+### 22.11.2016 [*v0.02.01*]
+
+ - Improved the appearance of widgets further (modified radial gradient)
+ - Adjusted amount to fade inactive widgets
+ - Adjusted brightness threshold for selecting contrast color (white/black) for text and borders in views
+ - Fixed bug with rendering gradients in active items in config activity
+ - Adjusted widget refresh rate calculation to disregard expired timers
+ - Improved alarm notification:
+  - Added button to dismiss alarm that is accessible in lock screen without unlocking
+  - Made notification persistent until alarm is stopped
+  - Forced screen to turn on when alarm is going off
+
 ### 21.11.2016 [*v0.01.03*]
 
  - Moved color manipulating methods into new ColorUtils class

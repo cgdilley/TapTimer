@@ -37,7 +37,7 @@ public class ColorUtils
     {
         float[] hsv = new float[3];
         Color.RGBToHSV(Color.red(color), Color.green(color), Color.blue(color), hsv);
-        return hsv[2] > 0.5f ? Color.BLACK : Color.WHITE;
+        return hsv[2] > 0.60f ? Color.BLACK : Color.WHITE;
     }
 
 
