@@ -31,6 +31,10 @@ import io.github.rockerhieu.emojicon.emoji.Emojicon;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/**
+ * EmojiPickerActivity is an activity for holding an EmojiconsFragment and responding to its
+ * event listeners, returning the results of any emojicon selections.
+ */
 public class EmojiPickerActivity extends FragmentActivity
         implements EmojiconGridFragment.OnEmojiconClickedListener,
                    EmojiconsFragment.OnEmojiconBackspaceClickedListener
@@ -42,19 +46,34 @@ public class EmojiPickerActivity extends FragmentActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_emoji_picker);
 
+        // Set the result to CANCELED.  This will cause the widget host to cancel
+        // out of the widget placement if they press the back button.
         setResult(RESULT_CANCELED);
     }
 
+    /** Called when an emojicon in the EmojiconsFragment is clicked.  The selected emoji
+     * will be packed into an Intent and returned to the calling activity.
+     *
+     * @param emojicon The clicked Emojicon
+     */
     @Override
     public void onEmojiconClicked(Emojicon emojicon)
     {
         Log.d("[EmojiPicker]", "PICKED: " + emojicon.getEmoji());
+
+        // Create the intent and store the string form of the Emojicon
         Intent intent = new Intent();
         intent.putExtra(EmojiPickerView.EMOJI_EXTRA, emojicon.getEmoji());
+
+        // End the activity, reporting success and sending the built intent
         setResult(RESULT_OK, intent);
         finish();
     }
 
+    /** Called when the backspace button is pressed.  This cancels the activity with no result.
+     *
+     * @param v View that was clicked
+     */
     @Override
     public void onEmojiconBackspaceClicked(View v)
     {

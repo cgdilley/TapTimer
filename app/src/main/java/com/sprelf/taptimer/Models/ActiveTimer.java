@@ -147,7 +147,7 @@ public class ActiveTimer extends ActiveItem
      * @inheritDoc
      */
     @Override
-    public int getConfigLayoutResource()
+    public int getConfigPreviewResource()
     {
         return R.layout.layout_activeitem_timer;
     }
@@ -156,8 +156,9 @@ public class ActiveTimer extends ActiveItem
      * @inheritDoc
      */
     @Override
-    public void attachDataToView(View view)
+    public void attachDataToConfigPreview(View view)
     {
+        // Build a Timer Widget view
         TimerWidgetView twv = (TimerWidgetView) view.findViewById(R.id.ActiveItem_Widget);
         if (twv == null)
         {
@@ -165,12 +166,15 @@ public class ActiveTimer extends ActiveItem
             return;
         }
 
+        // Calculate the percentage to display (convert seconds into milliseconds)
         float percentage = TimerWidget.calculatePercentage(startTime,
                                                            isPaused ? pauseTime
                                                                     : -1,
                                                            prefab.getDuration() * 1000);
+        // Apply values to the timer widget view
         twv.setPercentage(percentage);
         twv.setWidgetId(widgetId);
+        // Indicate that the view should not fade if inactive
         twv.setFadeIfInactive(false);
     }
 
@@ -186,13 +190,19 @@ public class ActiveTimer extends ActiveItem
         isPaused = true;
     }
 
+
+    /**
+     * @inheritDoc
+     */
     @Override
-    public View getConfigLayout(Context c)
+    public View getConfigView(Context c)
     {
         // TODO:  May want to change this to inflate into parent view, by passing parent arg
+        // Inflate the root view for displaying active timer configuration options
         View view = ((LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE))
                             .inflate(R.layout.dialog_config_activetimer, null);
 
+        // Apply the on-click functionality to the reset button
         view.findViewById(R.id.ActiveTimer_Config_ResetButton)
             .setOnClickListener(new View.OnClickListener()
             {
@@ -203,21 +213,33 @@ public class ActiveTimer extends ActiveItem
                 }
             });
 
+        // Get the region to plug in prefab configuration options, get the configuration layout
+        // for the prefab, and apply it
         ViewGroup prefabArea = (ViewGroup) view.findViewById(R.id.ActiveTimer_Config_CustomPrefabArea);
-        prefabArea.addView(prefab.getConfigLayout(c));
+        prefabArea.addView(prefab.getConfigView(c));
 
+        // Return the constructed configuration view
         return view;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public EmojiPickerView identifyEmojiPickerView(View view)
     {
+        // There are no emoji picker views in this active timer, so return any found in the prefab
         return prefab.identifyEmojiPickerView(view);
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void absorbConfigViewValues(View view)
     {
+        // There are no options to be absorbed by this active timer, so simply have the prefab
+        // absorb it's values
         prefab.absorbConfigViewValues(view.findViewById(R.id.ActiveTimer_Config_CustomPrefabArea));
     }
 
@@ -240,12 +262,18 @@ public class ActiveTimer extends ActiveItem
     /// PARCELLING STUFF
 
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public int describeContents()
     {
         return 0;
     }
 
+    /**
+     * @inheritDoc
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags)
     {
@@ -255,7 +283,7 @@ public class ActiveTimer extends ActiveItem
         dest.writeParcelable(prefab, flags);
     }
 
-
+    // Object required by all Parcelables for reconstructing data from parcels
     public static final Parcelable.Creator<ActiveTimer> CREATOR =
             new Parcelable.Creator<ActiveTimer>()
             {
@@ -270,6 +298,10 @@ public class ActiveTimer extends ActiveItem
                 }
             };
 
+    /** Construct an ActiveTimer object from a Parcel stream.
+     *
+     * @param in Parcel stream to read data from.
+     */
     private ActiveTimer(Parcel in)
     {
         startTime = in.readLong();

@@ -31,8 +31,11 @@
     <dimen name="TimerWidget_DefaultWidth">@dimen/Widget_DefaultWidth</dimen>
     <dimen name="TimerWidget_DefaultHeight">@dimen/Widget_DefaultHeight</dimen>
     <dimen name="TimerWidget_IndicatorThickness">4dp</dimen>
-    <dimen name="TimerWidget_Padding">0dp</dimen>
+    <dimen name="TimerWidget_ShadowThickness">1dp</dimen>
+    <dimen name="TimerWidget_Padding">2dp</dimen>
     <dimen name="TimerWidget_IconMargin">8dp</dimen>
+    <dimen name="TimerWidget_RadialGradientXOffset">1dp</dimen>
+    <dimen name="TimerWidget_RadialGradientYOffset">1dp</dimen>
 
     <dimen name="ConfigActivity_ActiveColumnBorderThickness">2dp</dimen>
     <dimen name="ConfigActivity_ActiveColumnBorderRadius">5dp</dimen>

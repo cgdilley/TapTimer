@@ -1,7 +1,6 @@
 package com.sprelf.taptimer.Views;
 
 import android.content.Context;
-import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -32,8 +31,9 @@ abstract public class BaseWidgetView extends View
 {
     protected String widgetId;
 
-
+    // Percentage that should be displayed by the widget
     protected float percentage;
+    // Whether or not the widget should fade when inactive
     protected boolean fadeIfInactive = true;
 
     public BaseWidgetView(Context c)
@@ -74,21 +74,5 @@ abstract public class BaseWidgetView extends View
         this.fadeIfInactive = fadeIfInactive;
     }
 
-    /** Calculates the average of the two given colors, with the second value weighted by the given
-     * weight between 0 and 1.
-     *
-     * @param color1 First color to average (is multiplied by 1 minus the weight)
-     * @param color2 Second color to average (is multiplied by weight)
-     * @param weight The weight of the second color
-     * @return The weighted average of the two colors
-     */
-    protected static int averageColor(int color1, int color2, float weight)
-    {
-        int red = (int) ((Color.red(color1) * (1 - weight)) + (Color.red(color2) * weight));
-        int green = (int) ((Color.green(color1) * (1 - weight)) + (Color.green(color2) * weight));
-        int blue = (int) ((Color.blue(color1) * (1 - weight)) + (Color.blue(color2) * weight));
-        int alpha = (int) ((Color.alpha(color1) * (1 - weight)) + (Color.alpha(color2) * weight));
-        return Color.argb(alpha, red, green, blue);
-    }
 
 }

@@ -1,18 +1,20 @@
 # TapTimer 
 
-**TapTimer** is an app designed to provide a simple means of setting alarms for a particular *duration*, as opposed to setting a particular *time*.  As a user, you may place any number of TapTimer widgets to your homescreen, and modifying their properties using the app.  You may store common timer presets as well, which can be quickly applied to any active widget.
+**TapTimer** is an Android app designed to provide a simple means of setting alarms for a particular *duration*, as opposed to setting a particular *time*.  As a user, you may place any number of TapTimer widgets to your homescreen, and modifying their properties using the app.  You may store common timer presets as well, which can be quickly applied to any active widget.
 
 ## Installing the App
 
 The latest APK file can always be found in the *'/LATEST_APK'* directory.  The following link will also be kept updated with the latest APK:  **[Download](https://drive.google.com/open?id=0B8zQ4O1-JvDrTUV5S2RwY2d5V2c)**
 
-Once having downloaded this file onto your Android device, launch the file to install the app.
+Once having downloaded this file onto your Android device, launch the file to install the app.  In order to be able to install the APK, you may need to enable installation of 3rd party apps in your device's settings.
+
+The app is designed to run on all devices 4.1 (Jelly Bean) and greater.
 
 ## Placing the Widgets
 
 The widget for this app will be found in your widget menu (which is usually found alongside your app menu), labelled *TapTimer*.  Drag the widget onto your homescreen to place the widget.  Any number of widgets may be placed in this manner.
 
-Placing a widget will open the configuration screen.  See instructions below for using this screen.  
+Placing a widget will open the configuration screen.  See instructions below for using this screen.
 This same screen may also be opened by launching the app itself, found in your app menu.  Settings for widgets may be modified at any time.  Press confirm in the screen to confirm the placement of the widget, or press cancel to cancel it's placement.
 
 *Users may find it useful to keep the app's launch icon near the widgets on their homescreen to allow for quick editing.*
@@ -45,15 +47,28 @@ Once the widgets have been placed and configured, simply tapping the widgets on 
 
 Widgets will update semi-infrequently, depending on the duration of the timer.  This is so that the timers do not significantly impact the performance of the device.
 
-Upon reaching their set duration, a widget will start an alarm sound on the device, using the device's default alarm settings.  These alarms will go off whether the device is awake or not.  The alarm will continue until dismissed, either by tapping any widget, or by tapping the notification pop-up.  This notification may be used to dismiss the alarm while the device is still locked, if notifications may be shown in the lock screen.
+Upon reaching their set duration, a widget will start an alarm sound on the device, using the device's default alarm settings.  These alarms will go off whether the device is awake or not.  The alarm will continue until dismissed, either by tapping any widget, or by tapping the notification pop-up.  This notification may be used to dismiss the alarm while the device is still locked, if notifications may be shown in the lock screen.  To display the dismiss button in the lock screen, you may have to swipe down on the notification area.
+
+## Changelog
+
+### v0.02.02
+
+ - Improved the appearance of the widgets, making them appear less flat.
+ - Improved the functionality of the alarm notification:
+  - Added extra notification button to dismiss alarm, which is accessible in the lock screen without unlocking.
+  - Made notification persistent until alarm is stopped; it may no longer be accidentally dismissed without disabling alarm.
+  - Forced the screen to be turned on while alarm is going off.  This causes the app to now require the 'WakeLock' permission.
+ - Reduced the amount that inactive widgets are faded.
+ - Changed the threshold of background colors for foreground elements (text, borders) to appear either white or black.
+ - Improved color selector, allowing it to properly select the existing color if it is one of the preset colors.
+
+### v0.01.01
+
+ - Initial release
 
 ## Features on the To-Do List
 
- - Provide more documentation in code
- - Add Help icons for in-app instructions
- - Improving the alarm notification by making it persist until the alarm has been dismissed, and by adding a quick action button to the notification rather than requiring the notification itself be tapped.
- - Turning the device's screen on when the alarm goes off.
-  - This will require the Android *WakeLock* permission, removing the app's status of being permission-less.
+ - Adding Help icons for in-app instructions
  - Adding the ability to modify alarm settings (different ringtones, ringtone volume, etc.)
  - Adding the ability to import/export lists of prefabs (or even synching online)
  - Adding double-click functionality to widgets to reset them more easily

@@ -7,13 +7,13 @@ android {
         applicationId "com.sprelf.taptimer"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 1
-        versionName "0.01.01"
+        versionCode 5
+        versionName "0.02.02"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
