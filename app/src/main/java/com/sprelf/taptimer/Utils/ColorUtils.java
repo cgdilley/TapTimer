@@ -31,7 +31,7 @@ public class ColorUtils
      * Calculates the color that contrasts the given color (either black or white).
      *
      * @param color Color to find the contrast of.
-     * @return Returns black if the given color's luminance is greater than 0.5, white otherwise.
+     * @return Returns black if the given color's luminance is greater than 0.6, white otherwise.
      */
     public static int getContrastColor(int color)
     {
@@ -57,12 +57,6 @@ public class ColorUtils
         int blue = (int) ((Color.blue(color1) * (1 - weight)) + (Color.blue(color2) * weight));
         int alpha = (int) ((Color.alpha(color1) * (1 - weight)) + (Color.alpha(color2) * weight));
         return Color.argb(alpha, red, green, blue);
-    }
-
-    public static int getFadeColor(int color, float fadeWeight)
-    {
-        // TODO:  Improve this
-        return averageColor(color, Color.WHITE, fadeWeight);
     }
 
 }

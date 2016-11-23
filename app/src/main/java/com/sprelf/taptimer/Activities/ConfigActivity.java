@@ -142,7 +142,7 @@ public class ConfigActivity extends Activity
                 // Create intent to start the PropertyConfigActivity, passing along the
                 // selected active item, and then start the activity.
                 Intent intent = new Intent(getApplicationContext(), PropertyConfigActivity.class);
-                intent.putExtra(PropertyConfigActivity.ACTIVEITEM_EXTRA, selected);
+                intent.putExtra(PropertyConfigActivity.CONFIG_EXTRA, selected);
                 startActivityForResult(intent, ACTIVEITEM_CONFIG_CODE);
 
                 // Consume the touch event
@@ -175,7 +175,7 @@ public class ConfigActivity extends Activity
                     // Create intent to start the PropertyConfigActivity, passing along the
                     // selected prefab, and then start the activity.
                     Intent intent = new Intent(getApplicationContext(), PropertyConfigActivity.class);
-                    intent.putExtra(PropertyConfigActivity.PREFAB_EXTRA, selected);
+                    intent.putExtra(PropertyConfigActivity.CONFIG_EXTRA, selected);
                     startActivityForResult(intent, PREFAB_CONFIG_CODE);
 
                     // Stop handling the click event
@@ -224,7 +224,7 @@ public class ConfigActivity extends Activity
                 // Create intent to start the PropertyConfigActivity, passing along the
                 // selected prefab, and then start the activity.
                 Intent intent = new Intent(getApplicationContext(), PropertyConfigActivity.class);
-                intent.putExtra(PropertyConfigActivity.PREFAB_EXTRA, selected);
+                intent.putExtra(PropertyConfigActivity.CONFIG_EXTRA, selected);
                 startActivityForResult(intent, PREFAB_CONFIG_CODE);
 
                 // Consume the touch event, so that it doesn't force the settings onto the
@@ -412,7 +412,7 @@ public class ConfigActivity extends Activity
                     if (modifyingPosition != ListView.INVALID_POSITION)
                     {
                         // If the selected prefab was deleted
-                        if (data.getExtras().containsKey(PropertyConfigActivity.DELETE_PREFAB_EXTRA))
+                        if (data.getExtras().containsKey(PropertyConfigActivity.DELETE_EXTRA))
                         {
                             // Remove the item from the list and update the grid view
                             prefabList.remove(modifyingPosition);
@@ -420,11 +420,11 @@ public class ConfigActivity extends Activity
                                     .notifyDataSetChanged();
                         }
                         // Otherwise, if the intent is carrying prefab data
-                        else if (data.getExtras().containsKey(PropertyConfigActivity.PREFAB_EXTRA))
+                        else if (data.getExtras().containsKey(PropertyConfigActivity.CONFIG_EXTRA))
                         {
                             // Extract the prefab data
                             Prefab newPrefab = data.getExtras().getParcelable(
-                                    PropertyConfigActivity.PREFAB_EXTRA);
+                                    PropertyConfigActivity.CONFIG_EXTRA);
 
                             // If the data extraction didn't fail
                             if (newPrefab != null)
@@ -451,11 +451,11 @@ public class ConfigActivity extends Activity
 
                     // If the modifying position is valid and contains active item data
                     if (modifyingPosition != AdapterView.INVALID_POSITION &&
-                        data.getExtras().containsKey(PropertyConfigActivity.ACTIVEITEM_EXTRA))
+                        data.getExtras().containsKey(PropertyConfigActivity.CONFIG_EXTRA))
                     {
                         // Extract the active item data from the given intent
                         ActiveItem newItem = data.getExtras().getParcelable(
-                                PropertyConfigActivity.ACTIVEITEM_EXTRA);
+                                PropertyConfigActivity.CONFIG_EXTRA);
 
                         // If the data extraction didn't fail
                         if (newItem != null)

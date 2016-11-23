@@ -7,8 +7,8 @@ android {
         applicationId "com.sprelf.taptimer"
         minSdkVersion 16
         targetSdkVersion 24
-        versionCode 4
-        versionName "0.02.01"
+        versionCode 5
+        versionName "0.02.02"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

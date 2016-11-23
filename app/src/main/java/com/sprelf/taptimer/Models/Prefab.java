@@ -1,7 +1,6 @@
 package com.sprelf.taptimer.Models;
 
 import android.content.Context;
-import android.os.Parcelable;
 import android.util.JsonWriter;
 import android.view.View;
 
@@ -31,7 +30,7 @@ import java.io.IOException;
  * Created by Chris on 16.11.2016.
  * Class for holding settings about a widget that may be shared among multiple independent widgets.
  */
-public abstract class Prefab implements Parcelable, Configurable
+public abstract class Prefab implements Configurable
 {
     // JSON field name for identifying Prefab type
     public static final String FIELD_TYPE = "type";

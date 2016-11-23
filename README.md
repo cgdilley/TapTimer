@@ -6,7 +6,7 @@
 
 The latest APK file can always be found in the *'/LATEST_APK'* directory.  The following link will also be kept updated with the latest APK:  **[Download](https://drive.google.com/open?id=0B8zQ4O1-JvDrTUV5S2RwY2d5V2c)**
 
-Once having downloaded this file onto your Android device, launch the file to install the app.
+Once having downloaded this file onto your Android device, launch the file to install the app.  In order to be able to install the APK, you may need to enable installation of 3rd party apps in your device's settings.
 
 The app is designed to run on all devices 4.1 (Jelly Bean) and greater.
 
@@ -49,9 +49,25 @@ Widgets will update semi-infrequently, depending on the duration of the timer.  
 
 Upon reaching their set duration, a widget will start an alarm sound on the device, using the device's default alarm settings.  These alarms will go off whether the device is awake or not.  The alarm will continue until dismissed, either by tapping any widget, or by tapping the notification pop-up.  This notification may be used to dismiss the alarm while the device is still locked, if notifications may be shown in the lock screen.  To display the dismiss button in the lock screen, you may have to swipe down on the notification area.
 
+## Changelog
+
+### v0.02.02
+
+ - Improved the appearance of the widgets, making them appear less flat.
+ - Improved the functionality of the alarm notification:
+  - Added extra notification button to dismiss alarm, which is accessible in the lock screen without unlocking.
+  - Made notification persistent until alarm is stopped; it may no longer be accidentally dismissed without disabling alarm.
+  - Forced the screen to be turned on while alarm is going off.  This causes the app to now require the 'WakeLock' permission.
+ - Reduced the amount that inactive widgets are faded.
+ - Changed the threshold of background colors for foreground elements (text, borders) to appear either white or black.
+ - Improved color selector, allowing it to properly select the existing color if it is one of the preset colors.
+
+### v0.01.01
+
+ - Initial release
+
 ## Features on the To-Do List
 
- - Implementing custom notification layout that allows ability to tap notification while in lock screen without unlocking.
  - Adding Help icons for in-app instructions
  - Adding the ability to modify alarm settings (different ringtones, ringtone volume, etc.)
  - Adding the ability to import/export lists of prefabs (or even synching online)

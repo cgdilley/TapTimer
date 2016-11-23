@@ -1,7 +1,6 @@
 package com.sprelf.taptimer.Models;
 
 import android.content.Context;
-import android.os.Parcelable;
 import android.view.View;
 
 import com.sprelf.taptimer.Views.EmojiPickerView;
@@ -28,7 +27,7 @@ import com.sprelf.taptimer.Views.EmojiPickerView;
  * Created by Chris on 17.11.2016.
  */
 
-public abstract class ActiveItem implements Parcelable, Configurable
+public abstract class ActiveItem implements Configurable
 {
     protected Prefab prefab;
     protected int widgetId;

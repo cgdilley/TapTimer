@@ -35,12 +35,10 @@ import com.sprelf.taptimer.Views.EmojiPickerView;
 public class PropertyConfigActivity extends Activity
 {
     // Field names for items in intent extras
-    public static final String PREFAB_EXTRA = "PrefabExtra";
-    public static final String ACTIVEITEM_EXTRA = "ActiveItemExtra";
-    public static final String DELETE_PREFAB_EXTRA = "DeletePrefab";
+    public static final String CONFIG_EXTRA = "ConfigExtra";
+    public static final String DELETE_EXTRA = "DeleteExtra";
 
-    private Prefab prefab = null;
-    private ActiveItem activeItem = null;
+    private Configurable configItem = null;
     private View configView;
     private EmojiPickerView emojiPickerView;
 
@@ -56,48 +54,27 @@ public class PropertyConfigActivity extends Activity
         // Check that relevant data was passed to this activity.  If not, quit immediately
         Intent intent = getIntent();
         if (intent == null || intent.getExtras() == null ||
-            (!intent.getExtras().containsKey(PREFAB_EXTRA) &&
-             !intent.getExtras().containsKey(ACTIVEITEM_EXTRA)))
+            !intent.getExtras().containsKey(CONFIG_EXTRA))
         {
             finish();
         }
         else
         {
-            Bundle extras = intent.getExtras();
+            // Get the configurable object to modify
+            configItem = intent.getExtras().getParcelable(CONFIG_EXTRA);
 
-            // If this activity was started to modify a prefab
-            if (extras.containsKey(PREFAB_EXTRA))
-            {
-                // Get the prefab object to modify
-                prefab = extras.getParcelable(PREFAB_EXTRA);
-
-                // If extraction failed, cancel out of activity
-                if (prefab == null)
-                    finish();
-                else
-                    initializeConfigurable(prefab);
-
-            }
-            // If this activity was started to modify an active item
-            else if (extras.containsKey(ACTIVEITEM_EXTRA))
-            {
-                // Get the active item object to modify
-                activeItem = extras.getParcelable(ACTIVEITEM_EXTRA);
-
-                // If extraction failed, cancel out of activity
-                if (activeItem == null)
-                    finish();
-                else
-                    initializeConfigurable(activeItem);
-            }
-            else
+            // If extraction failed, cancel out of activity
+            if (configItem == null)
                 finish();
+            else
+                initializeConfigurable(configItem);
         }
 
 
     }
 
-    /** Performs all actions necessary to initialize this activity with the given Configurable.
+    /**
+     * Performs all actions necessary to initialize this activity with the given Configurable.
      *
      * @param configurable Configurable object to initialize activity with.
      */
@@ -113,12 +90,24 @@ public class PropertyConfigActivity extends Activity
         if (emojiPickerView != null)
             emojiPickerView.setActivity(this);
 
-        // Apply the default prefab config layout to this activity
-        setContentView(R.layout.dialog_prefab_config);
+        if (configurable instanceof Prefab)
+        {
+            // Apply the default config layout to this activity
+            setContentView(R.layout.dialog_prefab_config);
+            // Add the prefab's custom config layout to this activity's layout
+            ((ViewGroup) findViewById(R.id.PrefabConfig_CustomPrefabArea))
+                    .addView(configView);
+        }
+        else if (configurable instanceof ActiveItem)
+        {
+            // Apply the default config layout to this activity
+            setContentView(R.layout.dialog_activeitem_config);
+            // Add the active item's custom config layout to this activity's layout
+            ((ViewGroup) findViewById(R.id.ActiveItemConfig_CustomActiveItemArea))
+                    .addView(configView);
+        }
 
-        // Add the prefab's custom config layout to this activity's layout
-        ((ViewGroup)findViewById(R.id.PrefabConfig_CustomPrefabArea))
-                .addView(configView);
+
     }
 
     /**
@@ -168,33 +157,22 @@ public class PropertyConfigActivity extends Activity
 
 
     /**
-     * Closes this activity, reporting success.  If this activity was called as a response to
-     * placing a widget, this indicates that the widget may go ahead and be placed.
+     * Closes this activity, reporting success.  Passes along the configured Configurable object.
      */
     private void closeWithSuccess()
     {
-        Intent result = new Intent();
+        configItem.absorbConfigViewValues(configView);
 
-        // If editing a prefab, attach the prefab data to the intent
-        if (prefab != null)
-        {
-            prefab.absorbConfigViewValues(configView);
-            result.putExtra(PREFAB_EXTRA, prefab);
-        }
-        // If editing an active item, attach the active item data to the intent
-        else if (activeItem != null)
-        {
-            activeItem.absorbConfigViewValues(configView);
-            result.putExtra(ACTIVEITEM_EXTRA, activeItem);
-        }
+        Intent result = new Intent();
+        result.putExtra(CONFIG_EXTRA, configItem);
+
         // Set a success result code and pass the data back
         setResult(RESULT_OK, result);
         finish();
     }
 
     /**
-     * Closes this activity, reporting failure.  If this activity was called as a response to
-     * placing a widget, this indicates that the widget should not be placed.
+     * Closes this activity, reporting failure.
      */
     private void closeWithFailure()
     {
@@ -209,7 +187,7 @@ public class PropertyConfigActivity extends Activity
     private void closeWithDeletion()
     {
         // If there is no prefab, close with failure instead
-        if (prefab == null)
+        if (configItem == null)
         {
             closeWithFailure();
             return;
@@ -217,7 +195,7 @@ public class PropertyConfigActivity extends Activity
 
         // Build the return intent and include a marker that the prefab should be deleted
         Intent result = new Intent();
-        result.putExtra(DELETE_PREFAB_EXTRA, true);
+        result.putExtra(DELETE_EXTRA, true);
 
         // Set a success result code and pass the data back
         setResult(RESULT_OK, result);

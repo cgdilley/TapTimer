@@ -77,13 +77,6 @@ public class AlarmPlayService extends Service
     public int onStartCommand(Intent intent, int flags, int startId)
     {
 
-        PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-
-        wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
-                                  PowerManager.ACQUIRE_CAUSES_WAKEUP, WAKELOCK_TAG);
-        if (wakeLock != null)
-            wakeLock.acquire();
-
         // Initialize new audio task ASync object
         task = new AudioTask();
 
@@ -109,7 +102,16 @@ public class AlarmPlayService extends Service
         else
         {
             Log.d("[AlarmService]", "Executing alarm...");
+            // Start the alarm asynchronously
             task.execute(alert);
+
+            // Acquire a WakeLock to keep the screen on while this service is running
+            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+
+            wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
+                                      PowerManager.ACQUIRE_CAUSES_WAKEUP, WAKELOCK_TAG);
+            if (wakeLock != null)
+                wakeLock.acquire();
 
             // Open the notification for dismissing the alarm
             openNotification(this);
@@ -127,6 +129,7 @@ public class AlarmPlayService extends Service
         task.stop();
         task.cancel(true);
 
+        // Release the wake lock
         if (wakeLock != null)
             wakeLock.release();
 
@@ -166,7 +169,7 @@ public class AlarmPlayService extends Service
                         .setLargeIcon(BitmapFactory.decodeResource(c.getResources(), R.drawable.icon))
                         .setContentTitle(c.getString(R.string.AlarmNotification_Title))
                         .setContentText(c.getString(R.string.AlarmNotification_Message))
-                        //.setContentIntent(pendingIntent)
+                        .setContentIntent(pendingIntent)
                         .addAction(android.R.drawable.ic_menu_close_clear_cancel,
                                    c.getString(R.string.AlarmNotification_Button),
                                    pendingIntent)

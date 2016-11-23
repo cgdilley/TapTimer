@@ -1,3 +1,10 @@
+### 23.11.2016 [*v0.02.02*]
+
+ - Improved readability and functionality of code in TimerWidgetView
+ - Simplified use of Configurable interface in PropertyConfigActivity
+ - Fixed bug in PropertyConfigActivity that would cause every config window to be a prefab config window
+ - Fixed clicking functionality in notifications
+
 ### 22.11.2016 [*v0.02.01*]
 
  - Improved the appearance of widgets further (modified radial gradient)

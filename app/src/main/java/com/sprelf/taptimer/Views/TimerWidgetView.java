@@ -46,7 +46,7 @@ import com.sprelf.taptimer.Widgets.TimerWidget;
 public class TimerWidgetView extends BaseWidgetView
 {
     private Typeface tf;
-    private Paint indicatorPaint, circlePaint, gradientPaint;
+    private Paint indicatorPaint, circlePaint, gradientPaint, shadowPaint, fadePaint;
     private RectF boundingRect;
 
     public TimerWidgetView(Context c)
@@ -69,25 +69,47 @@ public class TimerWidgetView extends BaseWidgetView
     {
         // tf = Typeface.createFromAsset(getContext().getAssets(), "roboto_bold.ttf");
 
+        int indicatorColor = getResources().getColor(R.color.TimerWidget_Indicator);
+        int shadowColor = getResources().getColor(R.color.TimerWidget_Shadow);
 
         indicatorPaint = new Paint();
+        indicatorPaint.setAntiAlias(true);
+        indicatorPaint.setStrokeCap(Paint.Cap.BUTT);
+        indicatorPaint.setStyle(Paint.Style.STROKE);
+        indicatorPaint.setColor(indicatorColor);
+
+        shadowPaint = new Paint();
+        shadowPaint.setAntiAlias(true);
+        shadowPaint.setStrokeCap(Paint.Cap.BUTT);
+        shadowPaint.setStyle(Paint.Style.STROKE);
+        shadowPaint.setColor(shadowColor);
+
         circlePaint = new Paint();
+        circlePaint.setStyle(Paint.Style.FILL);
+        circlePaint.setAntiAlias(true);
+
         gradientPaint = new Paint();
+        gradientPaint.setStyle(Paint.Style.FILL);
+        gradientPaint.setAntiAlias(true);
+
+        fadePaint = new Paint();
+        fadePaint.setStyle(Paint.Style.FILL);
+        fadePaint.setAntiAlias(true);
+        fadePaint.setColor(getResources().getColor(R.color.fadeFilter));
+
         boundingRect = new RectF();
     }
 
 
     /**
-     * @inheritDoc For TimerWidgetView, draws all components of the view, including the circle, the indicator,
-     * the icon, and the fade filter.
+     * @inheritDoc For TimerWidgetView, draws all components of the view, including the circle,
+     * the gradient, the indicator, the indicator shadow, the icon, and the fade filter.
      */
     @Override
     protected void onDraw(Canvas canvas)
     {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        int indicatorColor = getResources().getColor(R.color.TimerWidget_Indicator);
-        int shadowColor = getResources().getColor(R.color.TimerWidget_Shadow);
         int circleColor = prefs.getInt(TimerWidget.TIMER_COLOR + widgetId, 0);
         int icon = EmojiconHandler_Custom.getIcon(
                 getContext(), prefs.getString(TimerWidget.TIMER_ICON + widgetId, ""));
@@ -123,9 +145,17 @@ public class TimerWidgetView extends BaseWidgetView
         int radialGradientYOffset = getResources().getDimensionPixelSize(
                 R.dimen.TimerWidget_RadialGradientYOffset);
 
+        // Calculate the angle offset of the shadow based on shadow thickness
         float shadowRadius = radius - ((indicatorThickness + shadowThickness) / 2);
         float shadowCircumference = (float)(2 * shadowRadius * Math.PI);
         float shadowAngleOffset = shadowThickness / (shadowCircumference / 360);
+
+
+
+
+
+        ///////////////////// CIRCLE
+        ////////////////////////////////
 
 
 
@@ -135,49 +165,52 @@ public class TimerWidgetView extends BaseWidgetView
                          top + (height / 2) - radius,
                          right - (width / 2) + radius,
                          bottom - (height / 2) + radius);
-
-        /*
-        // THIS DRAWS A GRADIENT OVER THE WHOLE CIRCLE, EXCLUDING ICON
-        // Draw circle
-        //circlePaint.setColor(circleColor);
-        circlePaint.setShader(new RadialGradient(radialGradientXOffset,
-                                                 radialGradientYOffset,
-                                                 radius*4,  // Not sure why this is *4, but it works
-                                                 ColorUtils.getFadeColor(circleColor, 0.4f),
-                                                 circleColor,
-                                                 Shader.TileMode.MIRROR));
-        circlePaint.setStyle(Paint.Style.FILL);
-        circlePaint.setAntiAlias(true);
-        canvas.drawOval(boundingRect, circlePaint);
-        //*/
-
-
-        //*
         // Draw circle
         circlePaint.setColor(circleColor);
-        circlePaint.setStyle(Paint.Style.FILL);
-        circlePaint.setAntiAlias(true);
         canvas.drawOval(boundingRect, circlePaint);
-        //*
+
+
+
+
+
+        ///////////////////// GRADIENT
+        ////////////////////////////////
+
+
+
+
+        // Draw gradient, using same bounds as circle
         gradientPaint.setShader(new RadialGradient(radialGradientXOffset,
                                                  radialGradientYOffset,
                                                  radius * 4,
                                                  Color.parseColor("#66FFFFFF"),
                                                  Color.parseColor("#22000000"),
                                                  Shader.TileMode.MIRROR));
-        gradientPaint.setStyle(Paint.Style.FILL);
-        gradientPaint.setAntiAlias(true);
         canvas.drawOval(boundingRect, gradientPaint);
-        //*/
 
-        // Define the bounding rectangle for the icon
-        boundingRect.set(left + (width / 2) - radius + iconMargin,
-                         top + (height / 2) - radius + iconMargin,
-                         right - (width / 2) + radius - iconMargin,
-                         bottom - (height / 2) + radius - iconMargin);
+
+
+
+
+
+        ///////////////////// ICON
+        ////////////////////////////////
+
+
+
+
+
+
+
         // Draw icon
         try
         {
+            // Define the bounding rectangle for the icon
+            boundingRect.set(left + (width / 2) - radius + iconMargin,
+                             top + (height / 2) - radius + iconMargin,
+                             right - (width / 2) + radius - iconMargin,
+                             bottom - (height / 2) + radius - iconMargin);
+
             Bitmap bmp = ((BitmapDrawable) getContext().getResources()
                                                        .getDrawable(icon)).getBitmap();
             canvas.drawBitmap(bmp, null, boundingRect, null);
@@ -187,26 +220,10 @@ public class TimerWidgetView extends BaseWidgetView
         }
 
 
-        /*
-        // THIS DRAWS A GRADIENT OVER THE WHOLE CIRCLE, INCLUDING ICON
-        // Define the bounding rectangle for the circle
-        boundingRect.set(left + (width / 2) - radius,
-                         top + (height / 2) - radius,
-                         right - (width / 2) + radius,
-                         bottom - (height / 2) + radius);
-        circlePaint.setShader(new RadialGradient(radialGradientXOffset,
-                                                 radialGradientYOffset,
-                                                 radius * 4,
-                                                 Color.parseColor("#66FFFFFF"),
-                                                 Color.parseColor("#00FFFFFF"),
-                                                 Shader.TileMode.CLAMP));
-        canvas.drawOval(boundingRect, circlePaint);
-        //*/
 
 
-
-
-
+        ///////////////////// INDICATOR
+        ////////////////////////////////
 
 
 
@@ -219,13 +236,22 @@ public class TimerWidgetView extends BaseWidgetView
                          bottom - (height / 2) + radius - (indicatorThickness / 2));
 
         // Draw indicator arc
-        indicatorPaint.setColor(indicatorColor);
         indicatorPaint.setStrokeWidth(indicatorThickness);
-        indicatorPaint.setAntiAlias(true);
-        indicatorPaint.setStrokeCap(Paint.Cap.BUTT);
-        indicatorPaint.setStyle(Paint.Style.STROKE);
         float sweepAngle = 360 * (percentage);
         canvas.drawArc(boundingRect, 270 - sweepAngle, sweepAngle, false, indicatorPaint);
+
+
+
+
+
+
+
+        ///////////////////// SHADOW
+        ////////////////////////////////
+
+
+
+
 
 
         // Define the bounding rectangle for the shadow arc
@@ -236,12 +262,20 @@ public class TimerWidgetView extends BaseWidgetView
                 bottom - (height / 2) + radius - ((indicatorThickness + shadowThickness) / 2));
 
         // Draw shadow arc
-        indicatorPaint.setColor(shadowColor);
-        indicatorPaint.setShader(null);
-        indicatorPaint.setStrokeWidth(indicatorThickness + shadowThickness);
+        shadowPaint.setStrokeWidth(indicatorThickness + shadowThickness);
         canvas.drawArc(boundingRect, 270 - sweepAngle - shadowAngleOffset,
                        sweepAngle + (shadowAngleOffset*2),
-                       false, indicatorPaint);
+                       false, shadowPaint);
+
+
+
+
+
+
+
+
+        ///////////////////// FADE FILTER
+        ////////////////////////////////
 
 
 
@@ -257,11 +291,7 @@ public class TimerWidgetView extends BaseWidgetView
                              right - (width / 2) + radius,
                              bottom - (height / 2) + radius);
             // Draw fade filter circle
-            circlePaint.setColor(getResources().getColor(R.color.fadeFilter));
-            circlePaint.setShader(null);
-            circlePaint.setStyle(Paint.Style.FILL);
-            circlePaint.setAntiAlias(true);
-            canvas.drawOval(boundingRect, circlePaint);
+            canvas.drawOval(boundingRect, fadePaint);
         }
     }
 }
