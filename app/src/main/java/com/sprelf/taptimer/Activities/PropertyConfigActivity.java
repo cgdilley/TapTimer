@@ -3,14 +3,22 @@ package com.sprelf.taptimer.Activities;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.AttributeSet;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.PopupWindow;
+import android.widget.TextView;
 
 import com.sprelf.taptimer.Models.ActiveItem;
 import com.sprelf.taptimer.Models.Configurable;
 import com.sprelf.taptimer.Models.Prefab;
 import com.sprelf.taptimer.R;
-import com.sprelf.taptimer.Views.EmojiPickerView;
+
+import androidx.emoji2.emojipicker.EmojiPickerView;
+
 /*
  * TapTimer - A Timer Widget App
  * Copyright (C) 2016 Dilley, Christopher
@@ -40,7 +48,6 @@ public class PropertyConfigActivity extends Activity
 
     private Configurable configItem = null;
     private View configView;
-    private EmojiPickerView emojiPickerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState)
@@ -83,13 +90,6 @@ public class PropertyConfigActivity extends Activity
         // Get the configuration window layout from the prefab
         configView = configurable.getConfigView(this);
 
-        // Have the prefab identify its EmojiPickerView, if it has any
-        emojiPickerView = configurable.identifyEmojiPickerView(configView);
-        // If the Emoji Picker exists, mark this activity as its host activity
-        // for launching the EmojiPickerActivity from
-        if (emojiPickerView != null)
-            emojiPickerView.setActivity(this);
-
         if (configurable instanceof Prefab)
         {
             // Apply the default config layout to this activity
@@ -110,36 +110,6 @@ public class PropertyConfigActivity extends Activity
 
     }
 
-    /**
-     * @inheritDoc For PropertyConfigActivity, handles the result of an EmojiPickerActivity
-     */
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data)
-    {
-        if (resultCode == RESULT_OK)
-        {
-            switch (requestCode)
-            {
-                case EmojiPickerView.RESULT_EMOJI_PICKED:
-                    // If this activity has an emoji picker view, and the returned intent contains
-                    // valid data, set the emoji picker view to the selected emoji
-                    if (emojiPickerView != null &&
-                        data != null &&
-                        data.getExtras() != null &&
-                        data.getExtras().containsKey(EmojiPickerView.EMOJI_EXTRA))
-                    {
-                        emojiPickerView.setIcon(data.getExtras().getString(
-                                EmojiPickerView.EMOJI_EXTRA));
-                    }
-                    break;
-                default:
-                    super.onActivityResult(requestCode, resultCode, data);
-            }
-        }
-        else
-            super.onActivityResult(requestCode, resultCode, data);
-    }
-
     public void onConfirmClick(View view)
     {
         closeWithSuccess();
@@ -153,6 +123,24 @@ public class PropertyConfigActivity extends Activity
     public void onDeleteClick(View view)
     {
         closeWithDeletion();
+    }
+
+    public void onEmojiSelectClick(View view) {
+        LayoutInflater inflater = (LayoutInflater) getSystemService(LAYOUT_INFLATER_SERVICE);
+        View popupView = inflater.inflate(R.layout.layout_emojipicker, null);
+        EmojiPickerView emojiView = popupView.findViewById(R.id.EmojiPicker);
+
+        final PopupWindow popup = new PopupWindow(popupView,
+                                                  ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                  ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                  true);
+        popup.showAsDropDown(view);
+
+        emojiView.setOnEmojiPickedListener(item -> {
+            TextView button = PropertyConfigActivity.this.findViewById(R.id.PrefabTimer_Config_IconInput);
+            button.setText(item.getEmoji());
+            popup.dismiss();
+        });
     }
 
 

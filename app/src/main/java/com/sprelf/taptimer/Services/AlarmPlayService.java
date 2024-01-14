@@ -31,7 +31,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.PowerManager;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 import android.util.Log;
 
 import com.sprelf.taptimer.R;
@@ -160,7 +160,7 @@ public class AlarmPlayService extends Service
         // disable the alarm.
         Intent notiIntent = new Intent(ACTION_ALARM_STOP);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(c, 0, notiIntent,
-                                                                 PendingIntent.FLAG_UPDATE_CURRENT);
+                                                                 PendingIntent.FLAG_IMMUTABLE);
 
         // Construct the notification, attaching the above pending intent
         NotificationCompat.Builder builder =

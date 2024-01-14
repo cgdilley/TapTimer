@@ -20,14 +20,14 @@
     Used as the layout for emoji picker views.
     -->
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <ImageButton
-        android:id="@+id/EmojiPicker_Button"
-        android:layout_width="@dimen/EmojiPicker_Width"
-        android:layout_height="@dimen/EmojiPicker_Height"
-        android:scaleType="fitCenter"
-        />
+    <androidx.emoji2.emojipicker.EmojiPickerView
+        android:id="@+id/emoji_picker"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:emojiGridColumns="9" />
 
 </merge>

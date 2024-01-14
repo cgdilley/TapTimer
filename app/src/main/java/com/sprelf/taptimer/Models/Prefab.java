@@ -4,8 +4,6 @@ import android.content.Context;
 import android.util.JsonWriter;
 import android.view.View;
 
-import com.sprelf.taptimer.Views.EmojiPickerView;
-
 import java.io.IOException;
 
 /*
@@ -87,10 +85,6 @@ public abstract class Prefab implements Configurable
      */
     public abstract void absorbConfigViewValues(View view);
 
-    /** @inheritDoc
-     */
-    public abstract EmojiPickerView identifyEmojiPickerView(View view);
-
 
 
     /** Converts the given array of hexadecimal unicode codepoints into its equivalent String.
@@ -100,13 +94,14 @@ public abstract class Prefab implements Configurable
      */
     protected static String parseCodepoints(String[] codepoints)
     {
-        String iconString = "";
-        for (String codepoint : codepoints)
-        {
-            int hexVal = Integer.parseInt(codepoint, 16);
-            iconString += new String(Character.toChars(hexVal));
-        }
-        return iconString;
+//        StringBuilder iconString = new StringBuilder();
+//        for (String codepoint : codepoints)
+//        {
+//            int hexVal = Integer.parseInt(codepoint, 16);
+//            iconString.append(new String(Character.toChars(hexVal)));
+//        }
+//        return iconString.toString();
+        return codepoints[0];
     }
 
     /** Converts the given string into its equivalent array of hexadecimal unicode codepoints.
@@ -116,28 +111,11 @@ public abstract class Prefab implements Configurable
      */
     protected static String[] codePointArray(String in)
     {
-        String[] returnArray = new String[in.length()];
-        for (int i = 0; i < in.length(); i++)
-            returnArray[i] = Integer.toHexString(Character.codePointAt(in, i));
-        return returnArray;
-    }
-
-    /** Cleans up garbage in an icon string to try alleviate any issues with poorly formatting
-     * icon strings.
-     *
-     * @param icon String to sanitize.
-     * @return The sanitized version of the given string.
-     */
-    protected static String sanitizeIconString(String icon)
-    {
-        /*
-        for (int i = 0; i < Math.min(2, icon.length()); i++)
-        {
-            if (Integer.toHexString(Character.codePointAt(icon, i)).equals("de34"))
-                return icon.substring(0, i + 1);
-        }
-        */
-        return icon.substring(0, Math.min(2, icon.length()));
+//        String[] returnArray = new String[in.length()];
+//        for (int i = 0; i < in.length(); i++)
+//            returnArray[i] = Integer.toHexString(Character.codePointAt(in, i));
+//        return returnArray;
+        return new String[]{in};
     }
 
 

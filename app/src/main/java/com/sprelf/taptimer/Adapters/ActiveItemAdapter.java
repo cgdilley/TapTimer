@@ -1,7 +1,6 @@
 package com.sprelf.taptimer.Adapters;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,19 +55,22 @@ public class ActiveItemAdapter extends ArrayAdapter<ActiveItem>
     /** @inheritDoc
     * For ActiveItemAdapter, inflates the active item view and applies the active timer data.
      */
-    @NonNull
+
     @Override
-    public View getView(int position, View convertView, @NonNull ViewGroup parent)
+    public View getView(int position, View convertView, ViewGroup parent)
     {
         // Get the layout inflater service
         LayoutInflater inflater =
                 (LayoutInflater) c.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        // If we're getting any view other than the last element in the list,
+        // inflate the layout resource for the prefab and have the prefab apply its values to it
         // Get the active item associated with the current position
         ActiveItem activeItem = objects.get(position);
 
         // Inflate the layout resource associated with this active item
-        View returnView = inflater.inflate(activeItem.getConfigPreviewResource(), parent, false);
+        View returnView = inflater.inflate(activeItem.getConfigPreviewResource(),
+                                           parent, false);
 
         // Have the active item fill in its values into the inflated view
         activeItem.attachDataToConfigPreview(returnView);

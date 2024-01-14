@@ -3,7 +3,6 @@ package com.sprelf.taptimer.Views;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,14 +10,18 @@ import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.graphics.drawable.BitmapDrawable;
 import android.preference.PreferenceManager;
+import android.text.DynamicLayout;
+import android.text.Layout;
+import android.text.StaticLayout;
+import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 
-import com.sprelf.taptimer.Emojicon.EmojiconHandler_Custom;
 import com.sprelf.taptimer.R;
 import com.sprelf.taptimer.Widgets.TimerWidget;
+
+import androidx.emoji2.text.EmojiCompat;
 
 /*
  * TapTimer - A Timer Widget App
@@ -47,6 +50,7 @@ public class TimerWidgetView extends BaseWidgetView
 {
     private Typeface tf;
     private Paint indicatorPaint, circlePaint, gradientPaint, shadowPaint, fadePaint;
+    private TextPaint iconPaint;
     private RectF boundingRect;
 
     public TimerWidgetView(Context c)
@@ -69,7 +73,7 @@ public class TimerWidgetView extends BaseWidgetView
     {
         // tf = Typeface.createFromAsset(getContext().getAssets(), "roboto_bold.ttf");
 
-        int indicatorColor = getResources().getColor(R.color.TimerWidget_Indicator);
+        int indicatorColor = getResources().getColor(R.color.TimerWidget_IndicatorDefault);
         int shadowColor = getResources().getColor(R.color.TimerWidget_Shadow);
 
         indicatorPaint = new Paint();
@@ -97,6 +101,11 @@ public class TimerWidgetView extends BaseWidgetView
         fadePaint.setAntiAlias(true);
         fadePaint.setColor(getResources().getColor(R.color.fadeFilter));
 
+        iconPaint = new TextPaint();
+        iconPaint.setStyle(Paint.Style.FILL);
+        iconPaint.setAntiAlias(true);
+        iconPaint.setTextAlign(Paint.Align.CENTER);
+
         boundingRect = new RectF();
     }
 
@@ -108,12 +117,21 @@ public class TimerWidgetView extends BaseWidgetView
     @Override
     protected void onDraw(Canvas canvas)
     {
+//        EmojiCompat.init(getContext());
+
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
 
-        int circleColor = prefs.getInt(TimerWidget.TIMER_COLOR + widgetId, 0);
-        int icon = EmojiconHandler_Custom.getIcon(
-                getContext(), prefs.getString(TimerWidget.TIMER_ICON + widgetId, ""));
-
+        int circleColor = prefs.getInt(TimerWidget.TIMER_COLOR + widgetId, Color.rgb(0, 0, 0));
+        CharSequence icon =prefs.getString(TimerWidget.TIMER_ICON + widgetId, "");
+        Log.d("[TimerWidgetView]", "DRAWING: " + icon);
+//        if (EmojiCompat.isConfigured())
+//        {
+//            icon = EmojiCompat.get().process(icon);
+//            if (icon == null)
+//                icon = "";
+//        }
+        boolean paused = prefs.contains(TimerWidget.TIMER_PAUSE + widgetId);
+        boolean ready = !icon.equals("");
 
         // Get the padding value of the view
         int padding = getResources().getDimensionPixelSize(R.dimen.TimerWidget_Padding);
@@ -184,7 +202,7 @@ public class TimerWidgetView extends BaseWidgetView
                                                  radialGradientYOffset,
                                                  radius * 4,
                                                  Color.parseColor("#66FFFFFF"),
-                                                 Color.parseColor("#22000000"),
+                                                 Color.parseColor("#66000000"),
                                                  Shader.TileMode.MIRROR));
         canvas.drawOval(boundingRect, gradientPaint);
 
@@ -203,21 +221,10 @@ public class TimerWidgetView extends BaseWidgetView
 
 
         // Draw icon
-        try
-        {
-            // Define the bounding rectangle for the icon
-            boundingRect.set(left + (width / 2) - radius + iconMargin,
-                             top + (height / 2) - radius + iconMargin,
-                             right - (width / 2) + radius - iconMargin,
-                             bottom - (height / 2) + radius - iconMargin);
-
-            Bitmap bmp = ((BitmapDrawable) getContext().getResources()
-                                                       .getDrawable(icon)).getBitmap();
-            canvas.drawBitmap(bmp, null, boundingRect, null);
-        } catch (Resources.NotFoundException e)
-        {
-            Log.d("[WidgetView]", "Icon not found.");
-        }
+        iconPaint.setTextSize(height / 2);
+        int xPos = (int)boundingRect.centerX();
+        int yPos = (int)(boundingRect.centerY() - ((iconPaint.descent() + iconPaint.ascent()) / 2));
+        canvas.drawText(icon.toString(), xPos, yPos, iconPaint);
 
 
 
@@ -283,7 +290,7 @@ public class TimerWidgetView extends BaseWidgetView
 
 
         // If the view should fade when inactive, and is inactive, draw a fade filter over it
-        if (fadeIfInactive && prefs.contains(TimerWidget.TIMER_PAUSE + widgetId))
+        if (fadeIfInactive && (paused || !ready))
         {
             // Define the bounding rectangle for the fade filter circle
             boundingRect.set(left + (width / 2) - radius,

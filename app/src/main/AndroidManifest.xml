@@ -20,6 +20,8 @@
           package="com.sprelf.taptimer">
 
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="com.android.launcher.permission.INSTALL_SHORTCUT" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM"/>
 
     <application
         android:allowBackup="true"
@@ -38,6 +40,7 @@
                 <action android:name="com.sprelf.taptimer.ACTION_TIMER_CLICK"/>
                 <action android:name="com.sprelf.taptimer.ACTION_ALARM_FIRE"/>
                 <action android:name="com.sprelf.taptimer.ACTION_ALARM_STOP"/>
+                <action android:name="com.sprelf.taptimer.ACTION_CONFIGURE_LATEST"/>
             </intent-filter>
 
             <meta-data
@@ -48,7 +51,8 @@
         <activity
             android:name=".Activities.ConfigActivity"
             android:label="@string/widget_configure"
-            android:theme="@android:style/Theme.Dialog">
+            android:theme="@style/AppTheme"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
@@ -62,10 +66,6 @@
             android:name=".Activities.PropertyConfigActivity"
             android:label="@string/prefab_configure"
             android:theme="@android:style/Theme.Dialog">
-        </activity>
-        <activity
-            android:name=".Activities.EmojiPickerActivity"
-            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar">
         </activity>
 
         <service

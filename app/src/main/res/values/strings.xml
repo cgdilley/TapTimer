@@ -24,9 +24,14 @@
 
     <string name="TimerWidget_Label">TapTimer</string>
 
-    <string name="ConfigActivity_ActiveHeader">Active timers:</string>
+    <string name="ConfigActivity_ActiveHeader">Active</string>
+    <string name="ConfigActivity_PrefabHeader">Your custom timers</string>
     <string name="ConfigActivity_ButtonConfirm">Confirm</string>
     <string name="ConfigActivity_ButtonCancel">Cancel</string>
+    <string name="ConfigActivity_AddWidget">Add Widget</string>
+
+    <string name="ConfigToolbar_Donate">Donate</string>
+    <string name="ConfigToolbar_Settings">Settings</string>
 
     <string name="ConfigActivity_Dialog_Title">Set widget settings</string>
     <string name="ConfigActivity_Dialog_Confirm">Confirm</string>

@@ -47,7 +47,7 @@
             android:layout_weight="1"
             android:layout_marginTop="@dimen/ColorPicker_UnselectedMargin"
             android:layout_marginBottom="@dimen/ColorPicker_UnselectedMargin"
-            android:background="@color/colorForest"
+            android:background="@color/colorJade"
             android:clickable="true"/>
 
         <View

@@ -19,14 +19,13 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="rectangle">
 
+    <solid android:color="@color/ThemeSecondary"/>
+
     <corners
         android:topRightRadius="@dimen/ConfigActivity_ActiveColumnBorderRadius_TR"
         android:bottomLeftRadius="@dimen/ConfigActivity_ActiveColumnBorderRadius_BL"
         android:topLeftRadius="@dimen/ConfigActivity_ActiveColumnBorderRadius_TL"
         android:bottomRightRadius="@dimen/ConfigActivity_ActiveColumnBorderRadius_BR"/>
 
-    <stroke
-        android:width="@dimen/ConfigActivity_ActiveColumnBorderThickness"
-        android:color="@android:color/white"/>
 
 </shape>

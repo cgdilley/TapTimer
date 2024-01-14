@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.sprelf.taptimer.R;
-import com.sprelf.taptimer.Views.EmojiPickerView;
 import com.sprelf.taptimer.Views.TimerWidgetView;
 import com.sprelf.taptimer.Widgets.TimerWidget;
 
@@ -220,16 +219,6 @@ public class ActiveTimer extends ActiveItem
 
         // Return the constructed configuration view
         return view;
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
-    public EmojiPickerView identifyEmojiPickerView(View view)
-    {
-        // There are no emoji picker views in this active timer, so return any found in the prefab
-        return prefab.identifyEmojiPickerView(view);
     }
 
     /**

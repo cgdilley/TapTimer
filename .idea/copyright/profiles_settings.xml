@@ -1,8 +1,0 @@
-<component name="CopyrightManager">
-  <settings default="GNU General Public License 3.0">
-    <module2copyright>
-      <element module="All" copyright="GNU General Public License 3.0" />
-    </module2copyright>
-    <LanguageOptions name="JAVA" />
-  </settings>
-</component>

@@ -3,22 +3,23 @@ package com.sprelf.taptimer.Models;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.util.JsonWriter;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.sprelf.taptimer.Emojicon.EmojiconHandler_Custom;
 import com.sprelf.taptimer.R;
 import com.sprelf.taptimer.Utils.ColorUtils;
 import com.sprelf.taptimer.Views.ColorSwitcherView;
 import com.sprelf.taptimer.Views.DurationSetterView;
-import com.sprelf.taptimer.Views.EmojiPickerView;
 import com.sprelf.taptimer.Widgets.TimerWidget;
 
 import org.json.JSONArray;
@@ -27,6 +28,8 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.Arrays;
+
+import androidx.core.content.ContextCompat;
 
 /*
  * TapTimer - A Timer Widget App
@@ -75,7 +78,7 @@ public class Prefab_Timer extends Prefab
     private Prefab_Timer(String name, String icon, int duration, int color)
     {
         this.name = name;
-        this.icon = sanitizeIconString(icon);
+        this.icon = icon;
         this.duration = duration;
         this.color = color;
     }
@@ -146,7 +149,7 @@ public class Prefab_Timer extends Prefab
     public static Prefab_Timer buildDefault()
     {
         // Creates a new prefab with no name, the clock icon, five minute duration, and the color grey
-        return new Prefab_Timer("", parseCodepoints(new String[]{"1F550"}), 300, Color.GRAY);
+        return new Prefab_Timer("", "\uD83D\uDD50", 300, Color.GRAY);
     }
 
     /**
@@ -198,9 +201,6 @@ public class Prefab_Timer extends Prefab
     @Override
     public void save(Context c, int widgetId)
     {
-        // Ensure the icon string is sanitized before saving
-        icon = sanitizeIconString(icon);
-
         // Get the shared preferences editor
         SharedPreferences.Editor edit = PreferenceManager.getDefaultSharedPreferences(c).edit();
 
@@ -232,11 +232,13 @@ public class Prefab_Timer extends Prefab
     public void attachDataToConfigPreview(View groupView)
     {
         // Set the background color of the preview
-        groupView.findViewById(R.id.PrefabItem_Background).setBackgroundColor(color);
+        GradientDrawable bg = new GradientDrawable();
+        bg.setCornerRadius(groupView.getResources().getDimensionPixelSize(R.dimen.ConfigActivity_PrefabItemBackgroundRadius));
+        bg.setColor(color);
+        groupView.findViewById(R.id.PrefabItem_Background).setBackground(bg);
 
         // Get the appropriate icon for the icon string, and apply it to the preview
-        ImageView iconView = (ImageView) groupView.findViewById(R.id.PrefabItem_Icon);
-        iconView.setImageResource(EmojiconHandler_Custom.getIcon(groupView.getContext(), icon));
+        ((TextView) groupView.findViewById(R.id.PrefabItem_Icon)).setText(icon);
 
         // Apply the name to the preview, and adjust its color based on the background color
         TextView label = (TextView) groupView.findViewById(R.id.PrefabItem_Label);
@@ -258,8 +260,8 @@ public class Prefab_Timer extends Prefab
         ((EditText) view.findViewById(R.id.PrefabTimer_Config_NameInput))
                 .setText(name);
         // Apply the icon to the icon's input field
-        ((EmojiPickerView) view.findViewById(R.id.PrefabTimer_Config_IconInput))
-                .setIcon(icon);
+        ((TextView) view.findViewById(R.id.PrefabTimer_Config_IconInput))
+                .setText(icon);
         // Apply the color to the color's input field
         ColorSwitcherView cpv = (ColorSwitcherView) view.findViewById(R.id.PrefabTimer_Config_ColorInput);
         cpv.selectColor(color);
@@ -274,21 +276,11 @@ public class Prefab_Timer extends Prefab
      * @inheritDoc
      */
     @Override
-    public EmojiPickerView identifyEmojiPickerView(View view)
-    {
-        // Retrieve the EmojiPickerView from the config view
-        return (EmojiPickerView) view.findViewById(R.id.PrefabTimer_Config_IconInput);
-    }
-
-    /**
-     * @inheritDoc
-     */
-    @Override
     public void absorbConfigViewValues(View view)
     {
         // Get references to all input fields
         EditText nameInput = (EditText) view.findViewById(R.id.PrefabTimer_Config_NameInput);
-        EmojiPickerView iconInput = (EmojiPickerView) view.findViewById(R.id.PrefabTimer_Config_IconInput);
+        TextView iconInput = (TextView) view.findViewById(R.id.PrefabTimer_Config_IconInput);
         ColorSwitcherView colorInput = (ColorSwitcherView) view.findViewById(R.id.PrefabTimer_Config_ColorInput);
         DurationSetterView durationInput =
                 (DurationSetterView) view.findViewById(R.id.PrefabTimer_Config_DurationInput);
@@ -299,7 +291,7 @@ public class Prefab_Timer extends Prefab
 
         // Apply the values of the input fields
         name = nameInput.getText().toString();
-        icon = sanitizeIconString(iconInput.getIcon());
+        icon = iconInput.getText().toString();
         color = colorInput.getSelected();
         duration = durationInput.getTotalSeconds();
     }
@@ -322,7 +314,6 @@ public class Prefab_Timer extends Prefab
         writer.value(name);
 
         // Get codepoint array for icon string
-        icon = sanitizeIconString(icon);
         String[] iconStrings = codePointArray(icon);
 
         // Start JSON array and put add all codepoints

@@ -22,7 +22,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent">
+              android:layout_height="match_parent"
+    android:theme="@style/AppTheme">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -52,7 +53,7 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/PrefabConfig_RowHeight"
+        android:layout_height="90dp"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         >
@@ -64,11 +65,13 @@
             android:gravity="center_vertical"
             android:text="@string/TimerWidget_Config_IconLabel"
             />
-        <com.sprelf.taptimer.Views.EmojiPickerView
+        <TextView
             android:id="@+id/PrefabTimer_Config_IconInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"/>
+            android:layout_weight="1"
+            android:textSize="60dp"
+            android:onClick="onEmojiSelectClick"/>
 
     </LinearLayout>
 

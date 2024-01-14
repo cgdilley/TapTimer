@@ -17,9 +17,14 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     -->
 <resources>
-    <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="ThemePrimary">#7D6282</color>
+    <color name="ThemeSecondary">#5D576B</color>
+    <color name="ThemeCTA1">#5A4C87</color>
+    <color name="ThemeAccents">#AA5EA2</color>
+    <color name="ThemeText">#EEF0F2</color>
+    <color name="ThemeBackground">#353235</color>
+    <!-- https://coolors.co/5d576b-8884ff-d7bce8-e8cee4-fde2ff -->
+    <!-- https://coolors.co/353235-5a4c87-7d6282-88697e-aa5ea2 -->
 
     <color name="transparent">#00000000</color>
     <color name="fadeFilter">#77000000</color>
@@ -28,12 +33,13 @@
     <color name="colorRed">#FFFF0000</color>
     <color name="colorTransparentWhite">#77FFFFFF</color>
 
-    <color name="colorBrick">#FFB22222</color>
-    <color name="colorForest">#FF228B22</color>
-    <color name="colorGold">#FFD700</color>
-    <color name="colorRoyalBlue">#FF1944E1</color>
-    <color name="colorIndigo">#FF4B0082</color>
+    <color name="colorImperialRed">#F8333C</color>
+    <color name="colorJade">#44AF69</color>
+    <color name="colorOrange">#FCAB10</color>
+    <color name="colorMoonstone">#2B9EB3</color>
+    <color name="colorIndigo">#5F0A87</color>
+    <!--https://coolors.co/44af69-f8333c-fcab10-2b9eb3-dbd5b5-->
 
-    <color name="TimerWidget_Indicator">@color/colorWhite</color>
+    <color name="TimerWidget_IndicatorDefault">@color/colorWhite</color>
     <color name="TimerWidget_Shadow">#15000000</color>
 </resources>

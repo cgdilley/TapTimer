@@ -3,8 +3,6 @@ package com.sprelf.taptimer.Models;
 import android.content.Context;
 import android.view.View;
 
-import com.sprelf.taptimer.Views.EmojiPickerView;
-
 /*
  * TapTimer - A Timer Widget App
  * Copyright (C) 2016 Dilley, Christopher
@@ -79,10 +77,6 @@ public abstract class ActiveItem implements Configurable
     /** @inheritDoc
      */
     public abstract View getConfigView(Context c);
-
-    /** @inheritDoc
-     */
-    public abstract EmojiPickerView identifyEmojiPickerView(View view);
 
     /** @inheritDoc
      */

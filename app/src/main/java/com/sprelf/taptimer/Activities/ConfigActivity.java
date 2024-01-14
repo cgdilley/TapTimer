@@ -1,13 +1,15 @@
 package com.sprelf.taptimer.Activities;
 
-import android.app.Activity;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.JsonWriter;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -22,6 +24,7 @@ import com.sprelf.taptimer.Models.Prefab_Timer;
 import com.sprelf.taptimer.R;
 import com.sprelf.taptimer.Utils.JSONUtils;
 import com.sprelf.taptimer.Widgets.TimerWidget;
+import com.sprelf.taptimer.Widgets.WidgetHelpers;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,6 +34,10 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.emoji2.text.EmojiCompat;
 
 /*
  * TapTimer - A Timer Widget App
@@ -55,7 +62,7 @@ import java.util.List;
  * and as the configuration activity when placing a new widget.  This activity displays all active
  * timers and all prefabs, and allows users to manipulate both.
  */
-public class ConfigActivity extends Activity
+public class ConfigActivity extends AppCompatActivity
 {
     // Location of the prefab JSON file
     public static final String PREFABS_FILE = "timers.json";
@@ -66,7 +73,7 @@ public class ConfigActivity extends Activity
 
     // The widget ID that may have been passed if this activity was launched in
     // response to the placement of a new widget
-    private int mAppWidgetId;
+    private int selectedAppWidgetId;
     // List of all prefabs
     private List<Prefab> prefabList;
     // List of all active items
@@ -86,6 +93,11 @@ public class ConfigActivity extends Activity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_config);
 
+        EmojiCompat.init(this);
+
+        Toolbar myToolbar = (Toolbar) findViewById(R.id.Config_Toolbar);
+        setSupportActionBar(myToolbar);
+
 
         // Set the result to CANCELED.  This will cause the widget host to cancel
         // out of the widget placement if they press the back button.
@@ -96,16 +108,24 @@ public class ConfigActivity extends Activity
         Bundle extras = intent.getExtras();
         if (extras != null)
         {
-            mAppWidgetId = extras.getInt(
+            selectedAppWidgetId = extras.getInt(
                     AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID);
         }
         else
         {
-            mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
+            selectedAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
         }
 
         // Initialize all views in the activity
         initializeWindow();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu)
+    {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.config_toolbar, menu);
+        return true;
     }
 
     /**
@@ -127,6 +147,7 @@ public class ConfigActivity extends Activity
         activeItemListView = (ListView) findViewById(R.id.Config_ActiveList);
         // Apply the active item adapter to the list view, using the active items list
         activeItemListView.setAdapter(new ActiveItemAdapter(this, activeItemList));
+
         // Set the listener for long-click events on individual items in the list view
         activeItemListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
         {
@@ -232,6 +253,37 @@ public class ConfigActivity extends Activity
                 return true;
             }
         });
+
+        findViewById(R.id.Config_AddWidget).setOnClickListener(v -> {
+            WidgetHelpers.placeTimerWidget(getApplicationContext());
+            this.finish();
+        });
+    }
+
+    @Override
+    protected void onResume()
+    {
+        super.onResume();
+
+        //*
+        if (selectedAppWidgetId > 0)
+        {
+            for (int i = 0; i < activeItemList.size(); i++)
+            {
+                if (activeItemList.get(i).getWidgetId() == selectedAppWidgetId)
+                {
+                    int finalI = i;
+                    new Handler().postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            activeItemListView.setItemChecked(finalI, true);
+                            activeItemListView.getAdapter().getView(finalI, null, null).setActivated(true);
+                            Log.d("[ConfigActivity]", "SELECTED: " + activeItemListView.getCheckedItemPosition());
+                        }
+                    }, 200);
+                }
+            }
+        }//*/
     }
 
     /**
@@ -376,7 +428,7 @@ public class ConfigActivity extends Activity
         sendBroadcast(update);
 
         Intent result = new Intent();
-        result.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+        result.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, selectedAppWidgetId);
         setResult(RESULT_OK, result);
         finish();
     }

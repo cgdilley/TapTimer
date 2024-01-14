@@ -10,6 +10,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.sprelf.taptimer.Activities.ConfigActivity;
 import com.sprelf.taptimer.R;
 import com.sprelf.taptimer.Views.TimerWidgetView;
 
@@ -76,7 +77,8 @@ public class TimerWidget extends WidgetBase
         Intent intent = new Intent(c, TimerWidget.class);
         intent.setAction(ACTION_TIMER_CLICK);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(c, widgetId, intent, 0);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(c, widgetId, intent,
+                                                                 PendingIntent.FLAG_IMMUTABLE);
         views.setOnClickPendingIntent(R.id.WidgetView, pendingIntent);
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
@@ -197,9 +199,15 @@ public class TimerWidget extends WidgetBase
         // Get the start time and duration of this timer widget
         long startTime = prefs.getLong(TIMER_START + id, -1);
         long duration = prefs.getLong(TIMER_DURATION + id, -1);
-        // If settings do not yet exist for this widget ID, cancel this operation.
+        // If settings do not yet exist for this widget ID, open configuration window
         if (startTime == -1 || duration == -1)
+        {
+            Intent i = new Intent(c, ConfigActivity.class);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            i.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+            c.startActivity(i);
             return;
+        }
 
         // Get the current time
         long currTime = System.currentTimeMillis();

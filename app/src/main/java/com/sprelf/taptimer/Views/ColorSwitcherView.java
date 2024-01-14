@@ -106,8 +106,8 @@ public class ColorSwitcherView extends FrameLayout
                 pickerView.setColor(getBackgroundColor(v));
 
                 // Set the background color and text color of the color picker pop-up's text field
-                pickerView.findViewById(R.id.hexEdit).setBackgroundColor(Color.WHITE);
-                ((TextView) pickerView.findViewById(R.id.hexEdit)).setTextColor(Color.BLACK);
+//                pickerView.findViewById(R.id.hexEdit).setBackgroundColor(Color.WHITE);
+//                ((TextView) pickerView.findViewById(R.id.hexEdit)).setTextColor(Color.BLACK);
 
                 // Construct the dialog and display it
                 builder.setTitle(R.string.ColorPicker_Dialog_Title)

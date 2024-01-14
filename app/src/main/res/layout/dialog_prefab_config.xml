@@ -24,7 +24,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:padding="@dimen/dialog_margin">
+    android:padding="@dimen/dialog_margin"
+    android:theme="@style/AppTheme">
     
     <FrameLayout
         android:id="@+id/PrefabConfig_CustomPrefabArea"

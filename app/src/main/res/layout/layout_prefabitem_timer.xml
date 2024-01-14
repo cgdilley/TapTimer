@@ -31,20 +31,22 @@
         android:orientation="vertical"
         >
 
-        <ImageView
+        <TextView
             android:id="@+id/PrefabItem_Icon"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/ConfigActivity_PrefabItemWidth"
+            android:layout_height="wrap_content"
             android:padding="@dimen/ConfigActivity_PrefabItemIconMargin"
-            android:scaleType="fitCenter"
+            android:textSize="@dimen/ConfigActivity_PrefabItemIconSize"
+            android:gravity="center"
+            android:textColor="#000"
             />
 
         <TextView
             android:id="@+id/PrefabItem_Label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="10sp"
-            android:gravity="center"
+            android:textSize="16sp"
+            android:gravity="top|center"
             android:maxLines="1"
             />
 

@@ -4,6 +4,7 @@ import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -13,9 +14,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.RemoteViews;
 
+import com.sprelf.taptimer.Activities.ConfigActivity;
 import com.sprelf.taptimer.R;
 import com.sprelf.taptimer.Services.AlarmPlayService;
 import com.sprelf.taptimer.Views.BaseWidgetView;
+
+import java.util.Objects;
 
 /*
  * TapTimer - A Timer Widget App
@@ -48,6 +52,8 @@ public abstract class WidgetBase extends AppWidgetProvider
     public static final String ACTION_ALARM_FIRE = "com.sprelf.taptimer.ACTION_ALARM_FIRE";
     // Action descriptor for alarm stopping events
     public static final String ACTION_ALARM_STOP = "com.sprelf.taptimer.ACTION_ALARM_STOP";
+
+    public static final String ACTION_CONFIGURE_LATEST = "com.sprelf.taptimer.ACTION_CONFIGURE_LATEST";
 
     // Base request code for setting alarm timers.  Widget IDs are added to this value to create
     // unique channels.
@@ -211,28 +217,41 @@ public abstract class WidgetBase extends AppWidgetProvider
     public void onReceive(Context c, Intent intent)
     {
         super.onReceive(c, intent);
+        AppWidgetManager awm = AppWidgetManager.getInstance(c);
 
         // If the intent action matches the update intent of the subclass, force an update
-        if (intent.getAction().equals(getActionIntentName()))
+        if (Objects.equals(intent.getAction(), getActionIntentName()))
         {
             Log.d("[Widget]", "FORCING UPDATE...");
             update(c);
             startUpdateTimer(c);
         }
+        else if (Objects.equals(intent.getAction(), ACTION_CONFIGURE_LATEST))
+        {
+            Log.d("[Widget]", "LAUNCHING CONFIG ACTIVITY...");
+            int[] allIds = awm.getAppWidgetIds(
+                    new ComponentName(c, this.getClass()));
+            int id = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID,
+                                        allIds[allIds.length-1]);
+            Intent i = new Intent(c, ConfigActivity.class);
+            i.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id);
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            c.startActivity(i);
+        }
         // If the intent action represents a widget that was clicked, allow subclass to handle
-        else if (intent.getAction().equals(ACTION_TIMER_CLICK))
+        else if (Objects.equals(intent.getAction(), ACTION_TIMER_CLICK))
         {
             Log.d("[Widget]", "CLICK RECEIVED.");
             respondToClick(c, intent);
         }
         // If the intent action represents an alarm firing, allow subclass to handle
-        else if (intent.getAction().equals(ACTION_ALARM_FIRE))
+        else if (Objects.equals(intent.getAction(), ACTION_ALARM_FIRE))
         {
             Log.d("[Widget]", "FIRING ALARM.");
             fireAlarm(c);
         }
         // If the intent action represents an alarm stopping, stop the alarm
-        else if (intent.getAction().equals(ACTION_ALARM_STOP))
+        else if (Objects.equals(intent.getAction(), ACTION_ALARM_STOP))
         {
             Log.d("[Widget]", "STOPPING ALARM.");
             stopAlarm(c);
@@ -307,7 +326,7 @@ public abstract class WidgetBase extends AppWidgetProvider
         // Create the update broadcast pending intent
         Intent alarmIntent = new Intent(getActionIntentName());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(c, getAlarmId(), alarmIntent,
-                                                                 PendingIntent.FLAG_CANCEL_CURRENT);
+                                                                 PendingIntent.FLAG_IMMUTABLE);
 
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
 
@@ -334,7 +353,7 @@ public abstract class WidgetBase extends AppWidgetProvider
         // Create the update broadcast pending intent to identify
         Intent alarmIntent = new Intent(getActionIntentName());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(c, getAlarmId(), alarmIntent,
-                                                                 PendingIntent.FLAG_CANCEL_CURRENT);
+                                                                 PendingIntent.FLAG_IMMUTABLE);
 
         // Remove all matching existing pending intents
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
@@ -360,7 +379,7 @@ public abstract class WidgetBase extends AppWidgetProvider
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(c, ALARM_REQUEST_CODE + widgetId, intent,
-                                           PendingIntent.FLAG_UPDATE_CURRENT);
+                                           PendingIntent.FLAG_IMMUTABLE);
 
         // On versions of Android >= KitKat, sets an exact alarm.  Otherwise, sets an imprecise
         // alarm.
@@ -383,7 +402,7 @@ public abstract class WidgetBase extends AppWidgetProvider
         Intent intent = new Intent(ACTION_ALARM_FIRE);
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(c, ALARM_REQUEST_CODE + widgetId, intent,
-                                           PendingIntent.FLAG_CANCEL_CURRENT);
+                                           PendingIntent.FLAG_IMMUTABLE);
 
         // Remove all matching existing pending intents
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
