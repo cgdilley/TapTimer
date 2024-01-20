@@ -3,7 +3,7 @@
     {
       "type": "Prefab_Timer",
       "name": "Nap",
-      "icon": ["\uD83D\uDD50"],
+      "icon": ["\uD83D\uDE34"],
       "duration": 900,
       "color": "#F8333C"
     }
