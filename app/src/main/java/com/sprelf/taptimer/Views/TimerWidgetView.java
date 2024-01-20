@@ -10,7 +10,7 @@ import android.graphics.RadialGradient;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.graphics.Typeface;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.text.DynamicLayout;
 import android.text.Layout;
 import android.text.StaticLayout;
@@ -18,6 +18,8 @@ import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.sprelf.taptimer.Models.ActiveTimer;
+import com.sprelf.taptimer.Models.Prefab_Timer;
 import com.sprelf.taptimer.R;
 import com.sprelf.taptimer.Widgets.TimerWidget;
 
@@ -46,7 +48,7 @@ import androidx.emoji2.text.EmojiCompat;
  * Class for rendering the current status of a widget based on settings stored under a particular
  * widget ID.
  */
-public class TimerWidgetView extends BaseWidgetView
+public class TimerWidgetView extends BaseWidgetView<ActiveTimer>
 {
     private Typeface tf;
     private Paint indicatorPaint, circlePaint, gradientPaint, shadowPaint, fadePaint;
@@ -119,10 +121,13 @@ public class TimerWidgetView extends BaseWidgetView
     {
 //        EmojiCompat.init(getContext());
 
-        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        ActiveTimer info = _getWidgetInfo(getContext());
+        Prefab_Timer prefab = info != null ? (Prefab_Timer) info.getPrefab() : null;
 
-        int circleColor = prefs.getInt(TimerWidget.TIMER_COLOR + widgetId, Color.rgb(0, 0, 0));
-        CharSequence icon =prefs.getString(TimerWidget.TIMER_ICON + widgetId, "");
+
+        int circleColor = prefab != null ? prefab.getColor()
+                                       : Color.rgb(0, 0, 0);
+        CharSequence icon = prefab != null ? prefab.getIcon() : "";
         Log.d("[TimerWidgetView]", "DRAWING: " + icon);
 //        if (EmojiCompat.isConfigured())
 //        {
@@ -130,7 +135,7 @@ public class TimerWidgetView extends BaseWidgetView
 //            if (icon == null)
 //                icon = "";
 //        }
-        boolean paused = prefs.contains(TimerWidget.TIMER_PAUSE + widgetId);
+        boolean paused = info != null && info.isPaused();
         boolean ready = !icon.equals("");
 
         // Get the padding value of the view
@@ -300,5 +305,19 @@ public class TimerWidgetView extends BaseWidgetView
             // Draw fade filter circle
             canvas.drawOval(boundingRect, fadePaint);
         }
+    }
+
+    protected ActiveTimer _getWidgetInfo(Context c)
+    {
+        if (this.widgetInfo != null)
+            return this.widgetInfo;
+
+        if (this.widgetId == null)
+            return null;
+
+        int id = Integer.parseInt(this.widgetId);
+
+        Prefab_Timer prefab = Prefab_Timer.build(c, id);
+        return ActiveTimer.build(c, id, prefab);
     }
 }

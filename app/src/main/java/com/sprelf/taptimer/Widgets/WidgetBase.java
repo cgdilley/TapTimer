@@ -216,7 +216,6 @@ public abstract class WidgetBase extends AppWidgetProvider
     @Override
     public void onReceive(Context c, Intent intent)
     {
-        super.onReceive(c, intent);
         AppWidgetManager awm = AppWidgetManager.getInstance(c);
 
         // If the intent action matches the update intent of the subclass, force an update
@@ -255,6 +254,9 @@ public abstract class WidgetBase extends AppWidgetProvider
         {
             Log.d("[Widget]", "STOPPING ALARM.");
             stopAlarm(c);
+        }
+        else {
+            super.onReceive(c, intent);
         }
 
     }
@@ -324,7 +326,8 @@ public abstract class WidgetBase extends AppWidgetProvider
         Log.d("[Widget]", "Refresh rate: " + refreshRate);
 
         // Create the update broadcast pending intent
-        Intent alarmIntent = new Intent(getActionIntentName());
+        Intent alarmIntent = new Intent(c, this.getClass());
+        alarmIntent.setAction(getActionIntentName());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(c, getAlarmId(), alarmIntent,
                                                                  PendingIntent.FLAG_IMMUTABLE);
 
@@ -351,7 +354,8 @@ public abstract class WidgetBase extends AppWidgetProvider
     protected void stopUpdateTimer(Context c)
     {
         // Create the update broadcast pending intent to identify
-        Intent alarmIntent = new Intent(getActionIntentName());
+        Intent alarmIntent = new Intent(c, this.getClass());
+        alarmIntent.setAction(getActionIntentName());
         PendingIntent pendingIntent = PendingIntent.getBroadcast(c, getAlarmId(), alarmIntent,
                                                                  PendingIntent.FLAG_IMMUTABLE);
 
@@ -375,7 +379,8 @@ public abstract class WidgetBase extends AppWidgetProvider
 
         // Create new pending intent that will send a broadcast indicating that the alarm should
         // be fired.  Uses a unique channel based on the given widget ID to avoid clashes.
-        Intent intent = new Intent(ACTION_ALARM_FIRE);
+        Intent intent = new Intent(c, this.getClass());
+        intent.setAction(ACTION_ALARM_FIRE);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(c, ALARM_REQUEST_CODE + widgetId, intent,
@@ -399,7 +404,8 @@ public abstract class WidgetBase extends AppWidgetProvider
     protected void unsetAlarm(Context c, int widgetId)
     {
         // Create pending intent to match what was set
-        Intent intent = new Intent(ACTION_ALARM_FIRE);
+        Intent intent = new Intent(c, this.getClass());
+        intent.setAction(ACTION_ALARM_FIRE);
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(c, ALARM_REQUEST_CODE + widgetId, intent,
                                            PendingIntent.FLAG_IMMUTABLE);
@@ -421,6 +427,7 @@ public abstract class WidgetBase extends AppWidgetProvider
         // Start the alarm service
         Intent intent = new Intent(c, AlarmPlayService.class);
         c.startService(intent);
+        Log.d("[WidgetBase]", "Attempting to start alarm.");
     }
 
     /**
@@ -433,6 +440,7 @@ public abstract class WidgetBase extends AppWidgetProvider
         // Construct service intent and force the service to stop
         Intent intent = new Intent(c, AlarmPlayService.class);
         c.stopService(intent);
+        Log.d("[WidgetBase]", "Attempting to stop alarm, if it is playing.");
     }
 
 

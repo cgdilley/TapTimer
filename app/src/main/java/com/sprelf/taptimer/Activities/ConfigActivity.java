@@ -4,12 +4,14 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.JsonWriter;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -35,6 +37,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.emoji2.text.EmojiCompat;
@@ -162,7 +165,7 @@ public class ConfigActivity extends AppCompatActivity
 
                 // Create intent to start the PropertyConfigActivity, passing along the
                 // selected active item, and then start the activity.
-                Intent intent = new Intent(getApplicationContext(), PropertyConfigActivity.class);
+                Intent intent = new Intent(ConfigActivity.this, PropertyConfigActivity.class);
                 intent.putExtra(PropertyConfigActivity.CONFIG_EXTRA, selected);
                 startActivityForResult(intent, ACTIVEITEM_CONFIG_CODE);
 
@@ -195,7 +198,7 @@ public class ConfigActivity extends AppCompatActivity
 
                     // Create intent to start the PropertyConfigActivity, passing along the
                     // selected prefab, and then start the activity.
-                    Intent intent = new Intent(getApplicationContext(), PropertyConfigActivity.class);
+                    Intent intent = new Intent(ConfigActivity.this, PropertyConfigActivity.class);
                     intent.putExtra(PropertyConfigActivity.CONFIG_EXTRA, selected);
                     startActivityForResult(intent, PREFAB_CONFIG_CODE);
 
@@ -217,7 +220,8 @@ public class ConfigActivity extends AppCompatActivity
                     activeItem.reset();
 
                     // Save the values of the timer after modifying
-                    activeItem.save(getApplicationContext());
+//                    activeItem.save(getApplicationContext());
+                    activeItemList.set(activePos, activeItem);
 
                     Log.d("[WidgetConfig]", "Prefab selected: " + prefabList.get(position));
 
@@ -244,7 +248,7 @@ public class ConfigActivity extends AppCompatActivity
 
                 // Create intent to start the PropertyConfigActivity, passing along the
                 // selected prefab, and then start the activity.
-                Intent intent = new Intent(getApplicationContext(), PropertyConfigActivity.class);
+                Intent intent = new Intent(ConfigActivity.this, PropertyConfigActivity.class);
                 intent.putExtra(PropertyConfigActivity.CONFIG_EXTRA, selected);
                 startActivityForResult(intent, PREFAB_CONFIG_CODE);
 
@@ -284,6 +288,25 @@ public class ConfigActivity extends AppCompatActivity
                 }
             }
         }//*/
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item)
+    {
+        if (item.getItemId() == R.id.action_coffee)
+        {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://www.buymeacoffee.com/sprelf"));
+            startActivity(intent);
+            return true;
+        }
+        else if (item.getItemId() == R.id.action_settings)
+        {
+            Intent intent = new Intent(ConfigActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     /**
@@ -420,11 +443,14 @@ public class ConfigActivity extends AppCompatActivity
      */
     private void closeWithSuccess()
     {
+        Log.d("[ConfigActivity]", "Closing with success state.");
         savePrefabsToJSON();
         for (ActiveItem ai : activeItemList)
             ai.save(this);
 
-        Intent update = new Intent(TimerWidget.ACTION_AUTO_UPDATE);
+        Intent update = new Intent(ConfigActivity.this,
+                                   TimerWidget.class);
+        update.setAction(TimerWidget.ACTION_AUTO_UPDATE);
         sendBroadcast(update);
 
         Intent result = new Intent();
@@ -439,6 +465,7 @@ public class ConfigActivity extends AppCompatActivity
      */
     private void closeWithFailure()
     {
+        Log.d("[ConfigActivity]", "Closing with failure state.");
         setResult(RESULT_CANCELED);
         finish();
     }
@@ -513,7 +540,7 @@ public class ConfigActivity extends AppCompatActivity
                         if (newItem != null)
                         {
                             // Save the new item
-                            newItem.save(this);
+//                            newItem.save(this);
                             // Set the active item at the modifying position to this new active item
                             activeItemList.set(modifyingPosition, newItem);
 

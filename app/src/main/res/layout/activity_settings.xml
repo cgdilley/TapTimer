@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<!--
   ~     TapTimer - A Timer Widget App
   ~     Copyright (C) 2016 Dilley, Christopher
   ~
@@ -16,19 +16,12 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <item
-        android:id="@+id/action_coffee"
-        android:icon="@drawable/coffee_48_light"
-        android:title="@string/ConfigToolbar_Support"
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/settings_48_light"
-        android:title="@string/ConfigToolbar_Settings"
-        app:showAsAction="always"/>
-
-</menu>
+    <FrameLayout
+        android:id="@+id/settings"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

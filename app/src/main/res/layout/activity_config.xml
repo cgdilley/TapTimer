@@ -135,11 +135,11 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/ConfigActivity_ButtonCancel"
-                    android:onClick="onCancelClick"
                     android:layout_marginHorizontal="10dp"
                     android:padding="10dp"
                     android:textColor="@color/ThemeText"
                     android:backgroundTint="@color/ThemeSecondary"
+                    android:onClick="onCancelClick"
                     />
 
                 <Button
@@ -148,10 +148,10 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/ConfigActivity_ButtonConfirm"
-                    android:onClick="onConfirmClick"
                     android:layout_marginHorizontal="10dp"
                     android:padding="10dp"
                     android:textColor="@color/ThemeText"
+                    android:onClick="onConfirmClick"
                     />
 
 

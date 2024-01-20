@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--
+<!--
   ~     TapTimer - A Timer Widget App
   ~     Copyright (C) 2016 Dilley, Christopher
   ~
@@ -16,19 +16,15 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<resources>
+    <!-- Reply Preference -->
+    <string-array name="reply_entries">
+        <item>Reply</item>
+        <item>Reply to all</item>
+    </string-array>
 
-    <item
-        android:id="@+id/action_coffee"
-        android:icon="@drawable/coffee_48_light"
-        android:title="@string/ConfigToolbar_Support"
-        app:showAsAction="ifRoom"/>
-
-    <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/settings_48_light"
-        android:title="@string/ConfigToolbar_Settings"
-        app:showAsAction="always"/>
-
-</menu>
+    <string-array name="reply_values">
+        <item>reply</item>
+        <item>reply_all</item>
+    </string-array>
+</resources>

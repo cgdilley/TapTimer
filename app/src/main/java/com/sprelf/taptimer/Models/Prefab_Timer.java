@@ -7,7 +7,7 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.JsonWriter;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -209,7 +209,7 @@ public class Prefab_Timer extends Prefab
         edit.putString(TimerWidget.TIMER_NAME + id, name);
         edit.putString(TimerWidget.TIMER_ICON + id, icon);
         edit.putInt(TimerWidget.TIMER_COLOR + id, color);
-        edit.putLong(TimerWidget.TIMER_DURATION + id, duration * 1000); // Seconds -> Milliseconds
+        edit.putLong(TimerWidget.TIMER_DURATION + id, duration * 1000L); // Seconds -> Milliseconds
 
         // Commit changes synchronously to ensure they are written before updating widgets
         edit.commit();
@@ -289,11 +289,13 @@ public class Prefab_Timer extends Prefab
         if (nameInput == null || iconInput == null || colorInput == null || durationInput == null)
             return;
 
+        durationInput.clearFocus();
+
         // Apply the values of the input fields
         name = nameInput.getText().toString();
         icon = iconInput.getText().toString();
-        color = colorInput.getSelected();
         duration = durationInput.getTotalSeconds();
+        color = colorInput.getSelected();
     }
 
     /**

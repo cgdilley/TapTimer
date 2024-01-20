@@ -20,10 +20,11 @@
     Used as the base view for all active item configuration screens.
     -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:padding="@dimen/dialog_margin"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="@dimen/dialog_margin"
     android:theme="@style/AppTheme">
 
     <FrameLayout
@@ -39,21 +40,41 @@
         android:orientation="horizontal"
         >
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/ActiveItemConfig_ShareButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:layout_marginHorizontal="3dp"
+            app:icon="@drawable/share_24_light"
+            app:iconTint="@color/ThemeText"
+            app:iconGravity="textStart"
+            app:iconSize="24dp"
+            app:iconPadding="0dp"
+            android:onClick="onShareClick"
+            />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/ActiveItemConfig_CancelButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="5"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="3dp"
             android:text="@string/ConfigActivity_ButtonCancel"
+            android:backgroundTint="?attr/colorPrimaryDark"
+            android:textColor="@color/ThemeText"
             android:onClick="onCancelClick"
             />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/ActiveItemConfig_ConfirmButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="5"
+            android:layout_marginHorizontal="3dp"
             android:text="@string/ConfigActivity_ButtonConfirm"
+            android:textColor="@color/ThemeText"
             android:onClick="onConfirmClick"
             />
 

@@ -16,19 +16,17 @@
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item
-        android:id="@+id/action_coffee"
-        android:icon="@drawable/coffee_48_light"
-        android:title="@string/ConfigToolbar_Support"
-        app:showAsAction="ifRoom"/>
+    <Preference
+        app:key="Pref_Feedback"
+        app:title="@string/Pref_Feedback"
+        app:summary="@string/Pref_FeedbackSummary"/>
 
-    <item
-        android:id="@+id/action_settings"
-        android:icon="@drawable/settings_48_light"
-        android:title="@string/ConfigToolbar_Settings"
-        app:showAsAction="always"/>
+    <Preference
+        app:key="Pref_Ringtone"
+        app:title="@string/Pref_Ringtone"
+        app:summary="@string/Pref_RingtoneSummary"/>
 
-</menu>
+</PreferenceScreen>

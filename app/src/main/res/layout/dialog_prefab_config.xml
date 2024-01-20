@@ -17,28 +17,21 @@
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
     -->
 <!--
-    Used as the base view for all prefab configuration screens.
+    Used as the base view for all active item configuration screens.
     -->
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:padding="@dimen/dialog_margin"
     android:theme="@style/AppTheme">
-    
+
     <FrameLayout
         android:id="@+id/PrefabConfig_CustomPrefabArea"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/PrefabConfig_RowHeight"
-        android:text="@string/PrefabConfig_DeleteButtonText"
-        android:onClick="onDeleteClick"
+        android:layout_height="wrap_content"
         />
-    
 
     <LinearLayout
         android:id="@+id/PrefabConfig_ButtonBar"
@@ -47,26 +40,59 @@
         android:orientation="horizontal"
         >
 
-        <Button
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/PrefabConfig_ShareButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="3dp"
+            app:icon="@drawable/share_24_light"
+            app:iconTint="@color/ThemeText"
+            app:iconGravity="textStart"
+            app:iconSize="24dp"
+            app:iconPadding="0dp"
+            android:onClick="onShareClick"
+            />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/PrefabConfig_DeleteButton"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="3dp"
+            android:backgroundTint="@color/colorImperialRed"
+            app:icon="@drawable/delete_24_pink"
+            app:iconTint="#FABEBE"
+            app:iconGravity="textStart"
+            app:iconSize="24dp"
+            app:iconPadding="0dp"
+            android:onClick="onDeleteClick"
+            />
+
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/PrefabConfig_CancelButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="3dp"
             android:text="@string/ConfigActivity_ButtonCancel"
+            android:backgroundTint="?attr/colorPrimaryDark"
+            android:textColor="@color/ThemeText"
             android:onClick="onCancelClick"
             />
 
-        <Button
+        <com.google.android.material.button.MaterialButton
             android:id="@+id/PrefabConfig_ConfirmButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="2"
+            android:layout_marginHorizontal="3dp"
             android:text="@string/ConfigActivity_ButtonConfirm"
+            android:textColor="@color/ThemeText"
             android:onClick="onConfirmClick"
             />
 
-
     </LinearLayout>
-
 
 </LinearLayout>

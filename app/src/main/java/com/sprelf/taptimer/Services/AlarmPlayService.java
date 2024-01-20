@@ -23,6 +23,7 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -32,9 +33,13 @@ import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.PowerManager;
 import androidx.core.app.NotificationCompat;
+import androidx.preference.PreferenceManager;
+
 import android.util.Log;
+import android.view.WindowManager;
 
 import com.sprelf.taptimer.R;
+import com.sprelf.taptimer.Widgets.TimerWidget;
 
 import static com.sprelf.taptimer.Widgets.WidgetBase.ACTION_ALARM_STOP;
 
@@ -64,7 +69,7 @@ public class AlarmPlayService extends Service
     // ID for notifications
     public static final int NOTIFICATION_ID = 101;
 
-    public static final String WAKELOCK_TAG = "ALARM_WAKELOCK";
+    public static final String WAKELOCK_TAG = "taptimer:ALARM_WAKELOCK";
 
     // Custom ASyncTask for handling loading and managing of alarm's MediaPlayer object
     AudioTask task;
@@ -80,18 +85,7 @@ public class AlarmPlayService extends Service
         // Initialize new audio task ASync object
         task = new AudioTask();
 
-        // Get the URI to the default alarm ringtone
-        Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
-        // If the ringtone was not found, find backup
-        if (alert == null)
-        {
-            // Get the URI to the default notification ringtone
-            alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            // If the ringtone was not found, find backup
-            if (alert == null)
-                // Get the URI to the default ringing ringtone
-                alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
-        }
+        Uri alert = _getAlert(getApplicationContext());
         // If somehow no ringtone was found, give up and stop
         if (alert == null)
         {
@@ -108,10 +102,10 @@ public class AlarmPlayService extends Service
             // Acquire a WakeLock to keep the screen on while this service is running
             PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
 
-            wakeLock = pm.newWakeLock(PowerManager.SCREEN_BRIGHT_WAKE_LOCK |
+            wakeLock = pm.newWakeLock(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
                                       PowerManager.ACQUIRE_CAUSES_WAKEUP, WAKELOCK_TAG);
             if (wakeLock != null)
-                wakeLock.acquire();
+                wakeLock.acquire(20000);
 
             // Open the notification for dismissing the alarm
             openNotification(this);
@@ -125,6 +119,8 @@ public class AlarmPlayService extends Service
     @Override
     public void onDestroy()
     {
+        Log.d("[AlarmPlayService]", "Destroying alarm service.");
+
         // When this service is destroyed, stop the alarm
         task.stop();
         task.cancel(true);
@@ -158,7 +154,8 @@ public class AlarmPlayService extends Service
 
         // Create pending intent to include with the notification that will send a broadcast to
         // disable the alarm.
-        Intent notiIntent = new Intent(ACTION_ALARM_STOP);
+        Intent notiIntent = new Intent(c, TimerWidget.class);
+        notiIntent.setAction(ACTION_ALARM_STOP);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(c, 0, notiIntent,
                                                                  PendingIntent.FLAG_IMMUTABLE);
 
@@ -196,6 +193,29 @@ public class AlarmPlayService extends Service
         manager.cancel(NOTIFICATION_ID);
     }
 
+    private Uri _getAlert(Context c)
+    {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
+
+        String alertPref = prefs.getString("Pref_Ringtone", null);
+        if (alertPref != null)
+            return Uri.parse(alertPref);
+
+        // Get the URI to the default alarm ringtone
+        Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+        // If the ringtone was not found, find backup
+        if (alert == null)
+        {
+            // Get the URI to the default notification ringtone
+            alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            // If the ringtone was not found, find backup
+            if (alert == null)
+                // Get the URI to the default ringing ringtone
+                alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+        }
+
+        return alert;
+    }
 
 
 

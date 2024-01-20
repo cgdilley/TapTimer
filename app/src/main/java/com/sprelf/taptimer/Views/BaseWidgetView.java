@@ -4,6 +4,8 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;
 
+import com.sprelf.taptimer.Models.Configurable;
+
 /*
  * TapTimer - A Timer Widget App
  * Copyright (C) 2016 Dilley, Christopher
@@ -27,7 +29,7 @@ import android.view.View;
  * THIS WAS CREATED FOR THE FLIGHT BATTERY APP, MODIFIED TO SUIT THE NEEDS OF THIS APP
  * Describes how widget view for this app should be structured.
  */
-abstract public class BaseWidgetView extends View
+abstract public class  BaseWidgetView<T extends Configurable> extends View
 {
     protected String widgetId;
 
@@ -35,6 +37,8 @@ abstract public class BaseWidgetView extends View
     protected float percentage;
     // Whether or not the widget should fade when inactive
     protected boolean fadeIfInactive = true;
+
+    protected T widgetInfo = null;
 
     public BaseWidgetView(Context c)
     {
@@ -74,5 +78,9 @@ abstract public class BaseWidgetView extends View
         this.fadeIfInactive = fadeIfInactive;
     }
 
+    public void setWidgetInfo(T item)
+    {
+        this.widgetInfo = item;
+    }
 
 }

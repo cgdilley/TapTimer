@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
     TapTimer - A Timer Widget App
     Copyright (C) 2016 Dilley, Christopher
 
@@ -21,16 +20,17 @@
 
     <string name="widget_configure">TapTimer</string>
     <string name="prefab_configure">Configure Properties</string>
+    <string name="SettingsActivity_Title">Settings</string>
 
     <string name="TimerWidget_Label">TapTimer</string>
 
     <string name="ConfigActivity_ActiveHeader">Active</string>
-    <string name="ConfigActivity_PrefabHeader">Your custom timers</string>
+    <string name="ConfigActivity_PrefabHeader">Your presets</string>
     <string name="ConfigActivity_ButtonConfirm">Confirm</string>
     <string name="ConfigActivity_ButtonCancel">Cancel</string>
     <string name="ConfigActivity_AddWidget">Add Widget</string>
 
-    <string name="ConfigToolbar_Donate">Donate</string>
+    <string name="ConfigToolbar_Support">Support</string>
     <string name="ConfigToolbar_Settings">Settings</string>
 
     <string name="ConfigActivity_Dialog_Title">Set widget settings</string>
@@ -58,4 +58,15 @@
     <string name="AlarmNotification_Title">TapTimer Alarm</string>
     <string name="AlarmNotification_Message">Click to dismiss alarm.</string>
     <string name="AlarmNotification_Button">DISMISS</string>
+
+    <string name="Pref_Feedback">Send feedback</string>
+    <string name="Pref_FeedbackSummary">Report technical issues or suggest new features</string>
+    <string name="Pref_FeedbackChooser">Choose how to send</string>
+    <string name="Pref_Ringtone">Set ringtone</string>
+    <string name="Pref_RingtoneSummary">Choose the ringtone that will play for all alarms</string>
+
+    <string name="Toast_AlarmReset">Alarm reset.</string>
+
+    <string name="Toast_NotReady">Feature is not yet ready, sorry :X</string>
+
 </resources>

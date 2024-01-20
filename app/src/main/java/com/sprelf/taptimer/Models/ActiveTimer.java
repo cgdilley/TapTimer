@@ -4,11 +4,12 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.preference.PreferenceManager;
+import androidx.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.sprelf.taptimer.R;
 import com.sprelf.taptimer.Views.TimerWidgetView;
@@ -45,7 +46,7 @@ public class ActiveTimer extends ActiveItem
     // Starting time and pausing time of the timer
     private long startTime, pauseTime;
     // Whether or not the timer is currently paused
-    private boolean isPaused;
+    private boolean _isPaused;
 
     /**
      * Private constructor, use static constructors instead.
@@ -55,7 +56,7 @@ public class ActiveTimer extends ActiveItem
         this.prefab = prefab;
         this.startTime = startTime;
         this.pauseTime = pauseTime;
-        this.isPaused = isPaused;
+        this._isPaused = isPaused;
         this.widgetId = widgetId;
     }
 
@@ -121,18 +122,17 @@ public class ActiveTimer extends ActiveItem
 
         // Add the timing info
         edit.putLong(TimerWidget.TIMER_START + id, startTime);
-        if (isPaused)
+        if (_isPaused)
             edit.putLong(TimerWidget.TIMER_PAUSE + id, pauseTime);
 
         // Update the id list of active timers (may not be necessary?)
-        Set<String> ids = prefs.contains(TimerWidget.ID_LIST)
-                          ? prefs.getStringSet(TimerWidget.ID_LIST, null)
-                          : new HashSet<String>();
-        if (ids != null)
-        {
-            ids.add(id);
-            edit.putStringSet(TimerWidget.ID_LIST, ids);
-        }
+        Set<String> ids = new HashSet<>();
+
+        if (prefs.contains(TimerWidget.ID_LIST))
+            ids.addAll(prefs.getStringSet(TimerWidget.ID_LIST, new HashSet<>()));
+
+        ids.add(id);
+        edit.putStringSet(TimerWidget.ID_LIST, ids);
 
         // Save the changed preferences synchronously
         edit.commit();
@@ -167,12 +167,12 @@ public class ActiveTimer extends ActiveItem
 
         // Calculate the percentage to display (convert seconds into milliseconds)
         float percentage = TimerWidget.calculatePercentage(startTime,
-                                                           isPaused ? pauseTime
-                                                                    : -1,
+                                                           _isPaused ? pauseTime
+                                                                     : -1,
                                                            prefab.getDuration() * 1000);
         // Apply values to the timer widget view
         twv.setPercentage(percentage);
-        twv.setWidgetId(widgetId);
+        twv.setWidgetInfo(this);
         // Indicate that the view should not fade if inactive
         twv.setFadeIfInactive(false);
     }
@@ -186,7 +186,7 @@ public class ActiveTimer extends ActiveItem
         long currTime = System.currentTimeMillis();
         startTime = currTime;
         pauseTime = currTime;
-        isPaused = true;
+        _isPaused = true;
     }
 
 
@@ -209,6 +209,8 @@ public class ActiveTimer extends ActiveItem
                 public void onClick(View v)
                 {
                     reset();
+                    String text = c.getString(R.string.Toast_AlarmReset);
+                    Toast.makeText(c, text, Toast.LENGTH_SHORT).show();
                 }
             });
 
@@ -231,6 +233,11 @@ public class ActiveTimer extends ActiveItem
         // absorb it's values
         prefab.absorbConfigViewValues(view.findViewById(R.id.ActiveTimer_Config_CustomPrefabArea));
     }
+    
+    public boolean isPaused()
+    {
+        return _isPaused;
+    }
 
     /**
      * @inheritDoc
@@ -242,7 +249,7 @@ public class ActiveTimer extends ActiveItem
                "prefab=" + prefab +
                ", startTime=" + startTime +
                ", pauseTime=" + pauseTime +
-               ", isPaused=" + isPaused +
+               ", isPaused=" + _isPaused +
                ", widgetId=" + widgetId +
                '}';
     }
@@ -267,7 +274,7 @@ public class ActiveTimer extends ActiveItem
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeLong(startTime);
-        dest.writeLong(isPaused ? pauseTime : -1);
+        dest.writeLong(_isPaused ? pauseTime : -1);
         dest.writeInt(widgetId);
         dest.writeParcelable(prefab, flags);
     }
@@ -295,7 +302,7 @@ public class ActiveTimer extends ActiveItem
     {
         startTime = in.readLong();
         pauseTime = in.readLong();
-        isPaused = pauseTime != -1;
+        _isPaused = pauseTime != -1;
         widgetId = in.readInt();
         prefab = in.readParcelable(Prefab.class.getClassLoader());
     }

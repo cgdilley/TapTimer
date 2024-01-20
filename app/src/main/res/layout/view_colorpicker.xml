@@ -38,7 +38,7 @@
             android:layout_weight="1"
             android:layout_marginTop="@dimen/ColorPicker_UnselectedMargin"
             android:layout_marginBottom="@dimen/ColorPicker_UnselectedMargin"
-            android:background="#800000"
+            android:background="@color/colorImperialRed"
             android:clickable="true"/>
 
         <View
@@ -56,7 +56,7 @@
             android:layout_weight="1"
             android:layout_marginTop="@dimen/ColorPicker_UnselectedMargin"
             android:layout_marginBottom="@dimen/ColorPicker_UnselectedMargin"
-            android:background="#ffa500"
+            android:background="@color/colorMoonstone"
             android:clickable="true"/>
 
         <View
@@ -65,7 +65,16 @@
             android:layout_weight="1"
             android:layout_marginTop="@dimen/ColorPicker_UnselectedMargin"
             android:layout_marginBottom="@dimen/ColorPicker_UnselectedMargin"
-            android:background="#3b5998"
+            android:background="@color/colorOrange"
+            android:clickable="true"/>
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_marginTop="@dimen/ColorPicker_UnselectedMargin"
+            android:layout_marginBottom="@dimen/ColorPicker_UnselectedMargin"
+            android:background="@color/colorIndigo"
             android:clickable="true"/>
 
         <FrameLayout

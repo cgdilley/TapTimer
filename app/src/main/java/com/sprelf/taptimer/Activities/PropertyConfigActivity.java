@@ -1,6 +1,7 @@
 package com.sprelf.taptimer.Activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.AttributeSet;
@@ -11,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.PopupWindow;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sprelf.taptimer.Models.ActiveItem;
 import com.sprelf.taptimer.Models.Configurable;
@@ -123,6 +125,12 @@ public class PropertyConfigActivity extends Activity
     public void onDeleteClick(View view)
     {
         closeWithDeletion();
+    }
+
+    public void onShareClick(View view) {
+        Context c = getApplicationContext();
+        String text = c.getString(R.string.Toast_NotReady);
+        Toast.makeText(c, text, Toast.LENGTH_LONG).show();
     }
 
     public void onEmojiSelectClick(View view) {
