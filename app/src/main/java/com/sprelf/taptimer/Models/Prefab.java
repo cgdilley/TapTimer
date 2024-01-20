@@ -94,18 +94,14 @@ public abstract class Prefab implements Configurable
      */
     protected static String parseCodepoints(String[] codepoints)
     {
-        StringBuilder iconString = new StringBuilder();
-        for (String codepoint : codepoints)
+        String codepoint = codepoints[0];
+        try {
+            int hexVal = Integer.parseInt(codepoint, 16);
+            return new String(Character.toChars(hexVal));
+        } catch (NumberFormatException e)
         {
-            try {
-                int hexVal = Integer.parseInt(codepoint, 16);
-                iconString.append(new String(Character.toChars(hexVal)));
-            } catch (NumberFormatException e) {
-
-                return codepoints[0];
-            }
+            return codepoints[0];
         }
-        return iconString.toString();
     }
 
     /** Converts the given string into its equivalent array of hexadecimal unicode codepoints.
