@@ -29,4 +29,12 @@
         app:title="@string/Pref_Ringtone"
         app:summary="@string/Pref_RingtoneSummary"/>
 
+    <SeekBarPreference
+        app:key="Pref_DoubleTapWindow"
+        app:title="@string/Pref_DoubleTapWindow"
+        app:summary="@string/Pref_DoubleTapWindowSummary"
+        android:defaultValue="500"
+        android:min="200"
+        android:max="2000"/>
+
 </PreferenceScreen>

@@ -57,6 +57,8 @@
     <dimen name="ConfigActivity_PrefabItemHeight">95dp</dimen>
     <dimen name="ConfigActivity_PrefabItemIconMargin">6dp</dimen>
     <dimen name="ConfigActivity_PrefabItemIconSize">40dp</dimen>
+    <dimen name="ConfigActivity_PrefabNameTextSize">16sp</dimen>
+    <dimen name="ConfigActivity_PrefabNameTextSizeSmall">10sp</dimen>
     <dimen name="ConfigActivity_ActiveItemWidth">60dp</dimen>
     <dimen name="ConfigActivity_ActiveItemHeight">60dp</dimen>
     <dimen name="ConfigActivity_ActiveItemIconMargin">10dp</dimen>
@@ -64,6 +66,13 @@
     <dimen name="ConfigActivity_ActiveItemHighlightBorderRadius">10dp</dimen>
     <dimen name="ConfigActivity_ActiveItemHighlightBorderWidget">4dp</dimen>
     <dimen name="ConfigActivity_PrefabItemBackgroundRadius">10dp</dimen>
+
+    <dimen name="InfoActivity_HeaderSize">22sp</dimen>
+    <dimen name="InfoActivity_TextSize">13sp</dimen>
+    <dimen name="InfoActivity_SubheaderSize">18sp</dimen>
+    <dimen name="InfoActivity_HeaderMargin">20dp</dimen>
+    <dimen name="InfoActivity_SubheaderMargin">12dp</dimen>
+    <dimen name="InfoActivity_TextMargin">6dp</dimen>
 
     <dimen name="PrefabConfig_ColorPickerHeight">55dp</dimen>
     <dimen name="PrefabConfig_RowHeight">60dp</dimen>

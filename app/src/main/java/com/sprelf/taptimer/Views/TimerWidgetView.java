@@ -206,8 +206,8 @@ public class TimerWidgetView extends BaseWidgetView<ActiveTimer>
         gradientPaint.setShader(new RadialGradient(radialGradientXOffset,
                                                  radialGradientYOffset,
                                                  radius * 4,
-                                                 Color.parseColor("#66FFFFFF"),
-                                                 Color.parseColor("#66000000"),
+                                                 Color.parseColor("#44FFFFFF"),
+                                                 Color.parseColor("#44000000"),
                                                  Shader.TileMode.MIRROR));
         canvas.drawOval(boundingRect, gradientPaint);
 

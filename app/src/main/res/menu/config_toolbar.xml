@@ -20,6 +20,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
+        android:id="@+id/action_info"
+        android:icon="@drawable/info_48_light"
+        android:title="@string/ConfigToolbar_Info"
+        app:showAsAction="always"/>
+
+    <item
         android:id="@+id/action_coffee"
         android:icon="@drawable/coffee_48_light"
         android:title="@string/ConfigToolbar_Support"

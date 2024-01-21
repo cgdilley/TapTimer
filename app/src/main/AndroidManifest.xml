@@ -37,6 +37,11 @@
             android:name=".Activities.PropertyConfigActivity"
             android:label="@string/prefab_configure"
             android:theme="@android:style/Theme.Dialog"/>
+
+        <activity
+            android:name=".Activities.InfoActivity"
+            android:label="@string/InfoActivity_Title"
+            android:theme="@android:style/Theme.Holo.Dialog.NoActionBar"/>
         <receiver
             android:name=".Widgets.TimerWidget"
             android:enabled="true"

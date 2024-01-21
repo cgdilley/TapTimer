@@ -20,6 +20,7 @@
 
     <string name="widget_configure">TapTimer</string>
     <string name="prefab_configure">Configure Properties</string>
+    <string name="InfoActivity_Title">Info</string>
     <string name="SettingsActivity_Title">Settings</string>
 
     <string name="TimerWidget_Label">TapTimer</string>
@@ -32,10 +33,46 @@
 
     <string name="ConfigToolbar_Support">Support</string>
     <string name="ConfigToolbar_Settings">Settings</string>
+    <string name="ConfigToolbar_Info">Info</string>
 
     <string name="ConfigActivity_Dialog_Title">Set widget settings</string>
     <string name="ConfigActivity_Dialog_Confirm">Confirm</string>
     <string name="ConfigActivity_Dialog_Cancel">Cancel</string>
+
+    <string name="InfoActivity_Header">Welcome to TapTimer</string>
+    <string name="InfoActivity_Body1">Let\'s get started setting up your 1-tap alarms.\n\n
+
+    The point of this app is to add widgets to your home screen that you can start and stop
+        just by tapping on them.  This is great for tasks that you frequently have to set
+        a timer for, such as laundry or a nap.</string>
+    <string name="InfoActivity_Subheader1">The configuration screen</string>
+    <string name="InfoActivity_Body2">
+        To begin, we need to add an active widget to your home screen.  Click the Plus icon
+        under the "Active" header and drag the widget where you want it to go.\n\n
+
+        You may create preset timers to apply to the widgets by tapping the Plus icon under the
+        "Your presets" header.  Give it a name, choose an icon, a background color, and a
+        duration for the timer.  To apply a preset to an active timer, select a timer from
+        the active timer list, then tap the preset you wish to apply.\n\n
+
+        To modify the properties of an active timer or a preset, press and hold it until
+        the edit window appears.\n\n
+
+        To reset an active timer back to its full duration, double-tap it.
+    </string>
+    <string name="InfoActivity_Subheader2">Interacting with widgets</string>
+    <string name="InfoActivity_Body3">
+        Starting and stopping a timer is simple:  simply tap the widget once!\n\n
+
+        If you wish to reset the timer, double-tap.\n\n
+
+        To configure the widget, triple-tap.\n\n
+
+        To resize, move, or delete, press and hold the widget.\n\n
+    </string>
+    <string name="InfoActivity_CloseButton">Close</string>
+
+
 
     <string name="TimerWidget_Config_NameLabel">Name:</string>
     <string name="TimerWidget_Config_IconLabel">Icon:</string>
@@ -64,6 +101,10 @@
     <string name="Pref_FeedbackChooser">Choose how to send</string>
     <string name="Pref_Ringtone">Set ringtone</string>
     <string name="Pref_RingtoneSummary">Choose the ringtone that will play for all alarms</string>
+    <string name="Pref_DoubleTapWindow">Double tap window</string>
+    <string name="Pref_DoubleTapWindowSummary">When tapping widgets, two taps within a certain
+        window of time will be considered a "double-tap", and will reset the timer.  This
+        adjusts the size of that window.</string>
 
     <string name="Toast_AlarmReset">Alarm reset.</string>
 

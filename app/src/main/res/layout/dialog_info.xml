@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~     TapTimer - A Timer Widget App
+  ~     Copyright (C) 2016 Dilley, Christopher
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, either version 3 of the License, or
+  ~     (at your option) any later version.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="12dp"
+    android:orientation="vertical"
+    android:theme="@style/AppTheme">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/InfoActivity_CloseButton"
+        android:layout_alignParentTop="true"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/InfoActivity_Header"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/InfoActivity_HeaderMargin"
+                android:gravity="center_horizontal"
+                android:text="@string/InfoActivity_Header"
+                android:textColor="@color/ThemePrimary"
+                android:textSize="@dimen/InfoActivity_HeaderSize" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/InfoActivity_SubheaderMargin"
+                android:gravity="start"
+                android:text="@string/InfoActivity_Body1"
+                android:textColor="@color/ThemeText"
+                android:textSize="@dimen/InfoActivity_TextSize" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/InfoActivity_TextMargin"
+                android:gravity="center_horizontal"
+                android:text="@string/InfoActivity_Subheader1"
+                android:textColor="@color/ThemeSecondary"
+                android:textSize="@dimen/InfoActivity_SubheaderSize" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/InfoActivity_SubheaderMargin"
+                android:gravity="start"
+                android:text="@string/InfoActivity_Body2"
+                android:textColor="@color/ThemeText"
+                android:textSize="@dimen/InfoActivity_TextSize" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/InfoActivity_TextMargin"
+                android:gravity="center_horizontal"
+                android:text="@string/InfoActivity_Subheader2"
+                android:textColor="@color/ThemeSecondary"
+                android:textSize="@dimen/InfoActivity_SubheaderSize" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="start"
+                android:text="@string/InfoActivity_Body3"
+                android:textColor="@color/ThemeText"
+                android:textSize="@dimen/InfoActivity_TextSize" />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/InfoActivity_CloseButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_alignParentBottom="true"
+        android:onClick="onCloseClick"
+        android:text="@string/InfoActivity_CloseButton"
+        android:textColor="@color/ThemeText"/>
+</RelativeLayout>

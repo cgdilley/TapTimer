@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,12 +36,15 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.emoji2.text.EmojiCompat;
+import androidx.preference.PreferenceManager;
 
 /*
  * TapTimer - A Timer Widget App
@@ -81,6 +85,9 @@ public class ConfigActivity extends AppCompatActivity
     private List<Prefab> prefabList;
     // List of all active items
     private List<ActiveItem> activeItemList;
+
+    private Map<Integer, Long> activeItemLastClicked;
+
     // Variable for tracking the position of an element being modified, either when editing an
     // element from the active item list or the prefab list.
     private int modifyingPosition = ListView.INVALID_POSITION;
@@ -139,6 +146,7 @@ public class ConfigActivity extends AppCompatActivity
         // Get the list of active timers and prefabs.
         prefabList = loadPrefabs();
         activeItemList = loadActiveItems();
+        activeItemLastClicked = new HashMap<>();
         if (prefabList == null)
         {
             finish();
@@ -152,26 +160,40 @@ public class ConfigActivity extends AppCompatActivity
         activeItemListView.setAdapter(new ActiveItemAdapter(this, activeItemList));
 
         // Set the listener for long-click events on individual items in the list view
-        activeItemListView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener()
-        {
-            @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id)
+        activeItemListView.setOnItemLongClickListener((parent, view, position, id) -> {
+            // Get the selected active item
+            ActiveItem selected = activeItemList.get(position);
+            // Store the position, in order to allow modification of the list once returning
+            // from the PropertyConfigActivity.
+            modifyingPosition = position;
+
+            // Create intent to start the PropertyConfigActivity, passing along the
+            // selected active item, and then start the activity.
+            Intent intent = new Intent(ConfigActivity.this, PropertyConfigActivity.class);
+            intent.putExtra(PropertyConfigActivity.CONFIG_EXTRA, selected);
+            startActivityForResult(intent, ACTIVEITEM_CONFIG_CODE);
+
+            // Consume the touch event
+            return true;
+        });
+
+        activeItemListView.setOnItemClickListener((parent, view, position, id) -> {
+            ActiveItem selected = activeItemList.get(position);
+            if (selected == null)
+                return;
+
+            SharedPreferences prefs =
+                    PreferenceManager.getDefaultSharedPreferences(ConfigActivity.this);
+            long window = prefs.getInt("Pref_DoubleTapWindow", -1);
+            long lastClick = activeItemLastClicked.getOrDefault(selected.getWidgetId(), -1L);
+            long currTime = System.currentTimeMillis();
+            if (window != -1 && lastClick != -1 && (currTime - lastClick <= window))
             {
-                // Get the selected active item
-                ActiveItem selected = activeItemList.get(position);
-                // Store the position, in order to allow modification of the list once returning
-                // from the PropertyConfigActivity.
-                modifyingPosition = position;
-
-                // Create intent to start the PropertyConfigActivity, passing along the
-                // selected active item, and then start the activity.
-                Intent intent = new Intent(ConfigActivity.this, PropertyConfigActivity.class);
-                intent.putExtra(PropertyConfigActivity.CONFIG_EXTRA, selected);
-                startActivityForResult(intent, ACTIVEITEM_CONFIG_CODE);
-
-                // Consume the touch event
-                return true;
+                Log.d("[ConfigActivity]", "Active item double-click detected.");
+                selected.reset();
+                ((ActiveItemAdapter) activeItemListView.getAdapter()).notifyDataSetChanged();
             }
+            activeItemLastClicked.put(selected.getWidgetId(), currTime);
         });
 
         // Build the list (grid) view for the prefabs *****
@@ -302,6 +324,12 @@ public class ConfigActivity extends AppCompatActivity
         else if (item.getItemId() == R.id.action_settings)
         {
             Intent intent = new Intent(ConfigActivity.this, SettingsActivity.class);
+            startActivity(intent);
+            return true;
+        }
+        else if (item.getItemId() == R.id.action_info)
+        {
+            Intent intent = new Intent(ConfigActivity.this, InfoActivity.class);
             startActivity(intent);
             return true;
         }

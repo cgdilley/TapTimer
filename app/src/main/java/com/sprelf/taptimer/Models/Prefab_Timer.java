@@ -9,6 +9,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 import androidx.preference.PreferenceManager;
 import android.util.JsonWriter;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -244,6 +245,12 @@ public class Prefab_Timer extends Prefab
         TextView label = (TextView) groupView.findViewById(R.id.PrefabItem_Label);
         label.setText(name);
         label.setTextColor(ColorUtils.getContrastColor(color));
+        if (name.length() > 8)
+            label.setTextSize(TypedValue.COMPLEX_UNIT_PX, groupView.getResources().getDimension(
+                    R.dimen.ConfigActivity_PrefabNameTextSizeSmall));
+        else
+            label.setTextSize(TypedValue.COMPLEX_UNIT_PX, groupView.getResources().getDimension(
+                    R.dimen.ConfigActivity_PrefabNameTextSize));
     }
 
     /**
@@ -257,8 +264,8 @@ public class Prefab_Timer extends Prefab
                             .inflate(R.layout.dialog_config_prefabtimer, null);
 
         // Apply the name to the name's input field
-        ((EditText) view.findViewById(R.id.PrefabTimer_Config_NameInput))
-                .setText(name);
+        ((EditText) view.findViewById(R.id.PrefabTimer_Config_NameInput)).setText(name);
+
         // Apply the icon to the icon's input field
         ((TextView) view.findViewById(R.id.PrefabTimer_Config_IconInput))
                 .setText(icon);

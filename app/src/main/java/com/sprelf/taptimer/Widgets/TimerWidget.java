@@ -6,7 +6,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+
 import androidx.preference.PreferenceManager;
+
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -58,6 +60,9 @@ public class TimerWidget extends WidgetBase
     public static final String TIMER_NAME = KEY_PREFIX + "Name";
     public static final String TIMER_ICON = KEY_PREFIX + "Icon";
     public static final String TIMER_COLOR = KEY_PREFIX + "Color";
+
+    public static final String TIMER_LAST_CLICK = KEY_PREFIX + "LastClick";
+    public static final String TIMER_TRIPLE_CLICK_READY = KEY_PREFIX + "TripleClickReady";
     public static final String ID_LIST = KEY_PREFIX + "IDList";
 
     /**
@@ -151,6 +156,8 @@ public class TimerWidget extends WidgetBase
             validKeys.add(TIMER_ICON + id);
             validKeys.add(TIMER_COLOR + id);
             validKeys.add(TIMER_NAME + id);
+            validKeys.add(TIMER_LAST_CLICK + id);
+            validKeys.add(TIMER_TRIPLE_CLICK_READY + id);
         }
         validKeys.add(ID_LIST);
 
@@ -192,48 +199,78 @@ public class TimerWidget extends WidgetBase
 
         String id = Integer.toString(widgetId);
 
+        // Get the current time
+        long currTime = System.currentTimeMillis();
+
         // Get objects for reading and writing shared preferences
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(c);
         SharedPreferences.Editor edit = prefs.edit();
 
-        // Get the start time and duration of this timer widget
-        long startTime = prefs.getLong(TIMER_START + id, -1);
-        long duration = prefs.getLong(TIMER_DURATION + id, -1);
-        // If settings do not yet exist for this widget ID, open configuration window
-        if (startTime == -1 || duration == -1)
-        {
-            Intent i = new Intent(c, ConfigActivity.class);
-            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            i.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
-            c.startActivity(i);
-            return;
-        }
+        long clickWindow = prefs.getInt("Pref_DoubleTapWindow", 500);
 
-        // Get the current time
-        long currTime = System.currentTimeMillis();
-        // Get the pause time for this widget.  If it doesn't exist, this will be set to -1
-        long pauseTime = prefs.getLong(TIMER_PAUSE + id, -1);
-        // If the timer is not paused, pause it by adding a pause time
-        if (pauseTime == -1)
+        long lastClick = prefs.getLong(TIMER_LAST_CLICK + id, -1);
+        if (lastClick > 0 && (currTime - lastClick <= clickWindow))
         {
+            edit.putLong(TIMER_START + id, currTime);
             edit.putLong(TIMER_PAUSE + id, currTime);
-            if (currTime - startTime >= duration)
-                edit.putLong(TIMER_START + id, currTime);
+            if (prefs.getBoolean(TIMER_TRIPLE_CLICK_READY + id, false))
+            {
+                edit.putBoolean(TIMER_TRIPLE_CLICK_READY + id, false);
+                edit.commit();
+                Log.d("[TimerWidget]", "Triple-tap captured.");
+                Intent i = new Intent(c, ConfigActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                i.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+                c.startActivity(i);
+                return;
+            }
+            else
+            {
+                edit.putBoolean(TIMER_TRIPLE_CLICK_READY + id, true);
+                Log.d("[TimerWidget]", "Double-tap captured.");
+            }
         }
-        // If the timer is paused, unpause it by recalculating the startTime and removing the
-        // pause time.
         else
         {
-            // Calculate the amount of time that has passed since the timer was paused
-            long timeSincePause = currTime - pauseTime;
-            // Shift the start time by that amount, so the timer behaves as if the correct
-            // amount of time has passed.
-            long newStartTime = startTime + timeSincePause;
+            // Get the start time and duration of this timer widget
+            long startTime = prefs.getLong(TIMER_START + id, -1);
+            long duration = prefs.getLong(TIMER_DURATION + id, -1);
+            // If settings do not yet exist for this widget ID, open configuration window
+            if (startTime == -1 || duration == -1)
+            {
+                Intent i = new Intent(c, ConfigActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                i.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+                c.startActivity(i);
+                return;
+            }
 
-            // Update the start time and remove the pause time
-            edit.putLong(TIMER_START + id, newStartTime);
-            edit.remove(TIMER_PAUSE + id);
+            // Get the pause time for this widget.  If it doesn't exist, this will be set to -1
+            long pauseTime = prefs.getLong(TIMER_PAUSE + id, -1);
+            // If the timer is not paused, pause it by adding a pause time
+            if (pauseTime == -1)
+            {
+                edit.putLong(TIMER_PAUSE + id, currTime);
+                if (currTime - startTime >= duration)
+                    edit.putLong(TIMER_START + id, currTime);
+            }
+            // If the timer is paused, unpause it by recalculating the startTime and removing the
+            // pause time.
+            else
+            {
+                // Calculate the amount of time that has passed since the timer was paused
+                long timeSincePause = currTime - pauseTime;
+                // Shift the start time by that amount, so the timer behaves as if the correct
+                // amount of time has passed.
+                long newStartTime = startTime + timeSincePause;
+
+                // Update the start time and remove the pause time
+                edit.putLong(TIMER_START + id, newStartTime);
+                edit.remove(TIMER_PAUSE + id);
+            }
         }
+
+        edit.putLong(TIMER_LAST_CLICK + id, currTime);
 
         // Forcing synchronous commit to ensure values are changed before rendering update
         edit.commit();
