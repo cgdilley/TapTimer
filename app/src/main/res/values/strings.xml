@@ -95,6 +95,9 @@
     <string name="AlarmNotification_Title">TapTimer Alarm</string>
     <string name="AlarmNotification_Message">Click to dismiss alarm.</string>
     <string name="AlarmNotification_Button">DISMISS</string>
+    <string name="AlarmNotification_ChannelName">Alarm Notification</string>
+    <string name="AlarmNotification_ChannelDescription">Notifications that appear when an
+    alarm is ongoing.</string>
 
     <string name="Pref_Feedback">Send feedback</string>
     <string name="Pref_FeedbackSummary">Report technical issues or suggest new features</string>
@@ -102,9 +105,16 @@
     <string name="Pref_Ringtone">Set ringtone</string>
     <string name="Pref_RingtoneSummary">Choose the ringtone that will play for all alarms</string>
     <string name="Pref_DoubleTapWindow">Double tap window</string>
-    <string name="Pref_DoubleTapWindowSummary">When tapping widgets, two taps within a certain
-        window of time will be considered a "double-tap", and will reset the timer.  This
-        adjusts the size of that window.</string>
+    <string name="Pref_DoubleTapWindowSummary">Adjusts the sensitivity of
+        detecting double-taps.</string>
+    <string name="Pref_AutoSave">Auto-save on close</string>
+    <string name="Pref_AutoSaveSummary">Save changes to widgets and presets whenever the
+    configuration screen is closed.  If disabled, only saves changes when tapping Confirm.</string>
+    <string name="Pref_Notifications">Notifications</string>
+    <string name="Pref_NotificationsSummary">Make sure notifications are enabled
+        in your device settings if you want them to appear when the alarm goes off.</string>
+    <string name="PrefCat_Functional">Functional</string>
+    <string name="PrefCat_Nitpick">Unimportant</string>
 
     <string name="Toast_AlarmReset">Alarm reset.</string>
 

@@ -28,6 +28,7 @@ import android.provider.Settings;
 import android.view.MenuItem;
 
 import com.sprelf.taptimer.R;
+import com.sprelf.taptimer.Services.AlarmPlayService;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
@@ -89,6 +90,18 @@ public class SettingsActivity extends AppCompatActivity
                 intent.putExtra(Intent.EXTRA_SUBJECT, "TapTimer Feedback");
                 startActivity(Intent.createChooser(intent,
                                                    getString(R.string.Pref_FeedbackChooser)));
+                return true;
+            });
+            Preference notis = (Preference) this.findPreference("Pref_Notifications");
+            notis.setOnPreferenceClickListener((pref) -> {
+                Intent settingsIntent =
+                        new Intent(Settings.ACTION_APP_NOTIFICATION_SETTINGS)
+                                .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                .putExtra(Settings.EXTRA_APP_PACKAGE,
+                                          SettingsFragment.this.getActivity().getPackageName())
+                                .putExtra(Settings.EXTRA_CHANNEL_ID,
+                                          AlarmPlayService.CHANNEL_ID);
+                startActivity(settingsIntent);
                 return true;
             });
         }

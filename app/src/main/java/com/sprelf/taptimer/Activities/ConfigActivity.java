@@ -5,7 +5,9 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.JsonWriter;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ListView;
+import android.Manifest;
 
 import com.sprelf.taptimer.Adapters.ActiveItemAdapter;
 import com.sprelf.taptimer.Adapters.PrefabAdapter;
@@ -43,6 +46,7 @@ import java.util.Map;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.content.ContextCompat;
 import androidx.emoji2.text.EmojiCompat;
 import androidx.preference.PreferenceManager;
 
@@ -77,6 +81,8 @@ public class ConfigActivity extends AppCompatActivity
     public static final int PREFAB_CONFIG_CODE = 1;
     // Request code to send when opening a PropertyConfigActivity for editing an ActiveItem
     public static final int ACTIVEITEM_CONFIG_CODE = 2;
+
+    public static final int PERMISSION_REQUEST_CODE = 101;
 
     // The widget ID that may have been passed if this activity was launched in
     // response to the placement of a new widget
@@ -125,6 +131,8 @@ public class ConfigActivity extends AppCompatActivity
         {
             selectedAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
         }
+
+        handlePermissions();
 
         // Initialize all views in the activity
         initializeWindow();
@@ -299,9 +307,11 @@ public class ConfigActivity extends AppCompatActivity
                 if (activeItemList.get(i).getWidgetId() == selectedAppWidgetId)
                 {
                     int finalI = i;
-                    new Handler().postDelayed(new Runnable() {
+                    new Handler().postDelayed(new Runnable()
+                    {
                         @Override
-                        public void run() {
+                        public void run()
+                        {
                             activeItemListView.setItemChecked(finalI, true);
                             activeItemListView.getAdapter().getView(finalI, null, null).setActivated(true);
                             Log.d("[ConfigActivity]", "SELECTED: " + activeItemListView.getCheckedItemPosition());
@@ -335,6 +345,15 @@ public class ConfigActivity extends AppCompatActivity
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onPause()
+    {
+        super.onPause();
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(this);
+        if (prefs.getBoolean("Prefs_AutoSave", true))
+            saveChanges();
     }
 
     /**
@@ -471,6 +490,16 @@ public class ConfigActivity extends AppCompatActivity
      */
     private void closeWithSuccess()
     {
+        saveChanges();
+
+        Intent result = new Intent();
+        result.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, selectedAppWidgetId);
+        setResult(RESULT_OK, result);
+        finish();
+    }
+
+    private void saveChanges()
+    {
         Log.d("[ConfigActivity]", "Closing with success state.");
         savePrefabsToJSON();
         for (ActiveItem ai : activeItemList)
@@ -480,11 +509,6 @@ public class ConfigActivity extends AppCompatActivity
                                    TimerWidget.class);
         update.setAction(TimerWidget.ACTION_AUTO_UPDATE);
         sendBroadcast(update);
-
-        Intent result = new Intent();
-        result.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, selectedAppWidgetId);
-        setResult(RESULT_OK, result);
-        finish();
     }
 
     /**
@@ -629,6 +653,32 @@ public class ConfigActivity extends AppCompatActivity
         } catch (IOException e)
         {
             Log.e("[Config]", "Error writing to JSON file: " + e.getMessage());
+        }
+    }
+
+    private void handlePermissions()
+    {
+        List<String> permissions = new ArrayList<String>();
+        if (Build.VERSION.SDK_INT < 31)
+            permissions.add(Manifest.permission.SET_ALARM);
+        else if (Build.VERSION.SDK_INT < 33)
+            permissions.add(Manifest.permission.SCHEDULE_EXACT_ALARM);
+        else
+            permissions.add(Manifest.permission.USE_EXACT_ALARM);
+
+        if (Build.VERSION.SDK_INT >= 33)
+            permissions.add(Manifest.permission.POST_NOTIFICATIONS);
+
+        if (permissions.stream().anyMatch((p) ->
+            ContextCompat.checkSelfPermission(this, p) !=
+                                                 PackageManager.PERMISSION_GRANTED))
+        {
+            Log.d("[ConfigActivity]", "Requesting missing permissions.");
+            requestPermissions(permissions.toArray(new String[0]),
+                               PERMISSION_REQUEST_CODE);
+        }
+        else {
+            Log.d("[ConfigActivity]", "All permissions granted.");
         }
     }
 }

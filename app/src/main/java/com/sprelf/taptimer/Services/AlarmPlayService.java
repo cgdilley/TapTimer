@@ -18,6 +18,7 @@
 
 package com.sprelf.taptimer.Services;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -32,6 +33,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
 import android.os.PowerManager;
+
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
 
@@ -61,13 +63,14 @@ import static com.sprelf.taptimer.Widgets.WidgetBase.ACTION_ALARM_STOP;
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-/** Service responsible for playing the alarm sound.
- *
+/**
+ * Service responsible for playing the alarm sound.
  */
 public class AlarmPlayService extends Service
 {
     // ID for notifications
     public static final int NOTIFICATION_ID = 101;
+    public static final String CHANNEL_ID = "taptimer:ALARM";
 
     public static final String WAKELOCK_TAG = "taptimer:ALARM_WAKELOCK";
 
@@ -76,7 +79,8 @@ public class AlarmPlayService extends Service
 
     PowerManager.WakeLock wakeLock;
 
-    /** @inheritDoc
+    /**
+     * @inheritDoc
      */
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
@@ -114,7 +118,8 @@ public class AlarmPlayService extends Service
         return super.onStartCommand(intent, flags, startId);
     }
 
-    /** @inheritDoc
+    /**
+     * @inheritDoc
      */
     @Override
     public void onDestroy()
@@ -136,7 +141,8 @@ public class AlarmPlayService extends Service
     }
 
 
-    /** @inheritDoc
+    /**
+     * @inheritDoc
      */
     @Override
     public IBinder onBind(Intent intent)
@@ -145,12 +151,22 @@ public class AlarmPlayService extends Service
         throw new UnsupportedOperationException("Not yet implemented");
     }
 
-    /** Opens a persistent notification that provides a button to allow a user to stop the alarm.
+    /**
+     * Opens a persistent notification that provides a button to allow a user to stop the alarm.
      *
      * @param c Context within which to perform the operation.
      */
     private static void openNotification(Context c)
     {
+        NotificationManager manager =
+                (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        NotificationChannel channel = new NotificationChannel(
+                CHANNEL_ID,
+                c.getString(R.string.AlarmNotification_ChannelName),
+                NotificationManager.IMPORTANCE_HIGH);
+        channel.setDescription(c.getString(R.string.AlarmNotification_ChannelDescription));
+        manager.createNotificationChannel(channel);
 
         // Create pending intent to include with the notification that will send a broadcast to
         // disable the alarm.
@@ -159,9 +175,10 @@ public class AlarmPlayService extends Service
         PendingIntent pendingIntent = PendingIntent.getBroadcast(c, 0, notiIntent,
                                                                  PendingIntent.FLAG_IMMUTABLE);
 
+        Log.d("[AlarmPlayService]", "Attempting to produce notification.");
         // Construct the notification, attaching the above pending intent
         NotificationCompat.Builder builder =
-                new NotificationCompat.Builder(c)
+                new NotificationCompat.Builder(c, CHANNEL_ID)
                         .setSmallIcon(R.drawable.icon)
                         .setLargeIcon(BitmapFactory.decodeResource(c.getResources(), R.drawable.icon))
                         .setContentTitle(c.getString(R.string.AlarmNotification_Title))
@@ -170,18 +187,16 @@ public class AlarmPlayService extends Service
                         .addAction(android.R.drawable.ic_menu_close_clear_cancel,
                                    c.getString(R.string.AlarmNotification_Button),
                                    pendingIntent)
-                        .setPriority(2)
+                        .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setOngoing(true)
-                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
-
-        // Get the notification manager, and display the notification
-        NotificationManager manager =
-                (NotificationManager) c.getSystemService(Context.NOTIFICATION_SERVICE);
+                        .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
+                        .setAutoCancel(true);
 
         manager.notify(NOTIFICATION_ID, builder.build());
     }
 
-    /** Closes the persistent alarm dismissal notification.
+    /**
+     * Closes the persistent alarm dismissal notification.
      *
      * @param c Context within which to perform the operation.
      */
@@ -218,21 +233,16 @@ public class AlarmPlayService extends Service
     }
 
 
-
-
-
-
-
-    /** Custom AsyncTask object for managing the alarm's media player.
-     *
+    /**
+     * Custom AsyncTask object for managing the alarm's media player.
      */
     private class AudioTask extends AsyncTask<Uri, Void, Void>
     {
         // MediaPlayer object to play alarm through
         private MediaPlayer mp;
 
-        /** Resume the MediaPlayer, if paused.
-         *
+        /**
+         * Resume the MediaPlayer, if paused.
          */
         public void resume()
         {
@@ -240,8 +250,8 @@ public class AlarmPlayService extends Service
                 mp.start();
         }
 
-        /** Pause the MediaPlayer, if playing.
-         *
+        /**
+         * Pause the MediaPlayer, if playing.
          */
         public void pause()
         {
@@ -249,8 +259,8 @@ public class AlarmPlayService extends Service
                 mp.pause();
         }
 
-        /** Stop the MediaPlayer, and release it from memory.
-         *
+        /**
+         * Stop the MediaPlayer, and release it from memory.
          */
         public void stop()
         {
@@ -265,7 +275,8 @@ public class AlarmPlayService extends Service
         }
 
 
-        /** @inheritDoc For AudioTask, sets up the MediaPlayer and starts it playing.
+        /**
+         * @inheritDoc For AudioTask, sets up the MediaPlayer and starts it playing.
          */
         @Override
         protected Void doInBackground(Uri... params)
@@ -277,7 +288,8 @@ public class AlarmPlayService extends Service
             // Extract the URI parameter
             Uri res = params[0];
 
-            try {
+            try
+            {
                 // Construct the media player
                 mp = new MediaPlayer();
                 mp.reset();
@@ -291,7 +303,8 @@ public class AlarmPlayService extends Service
                 mp.prepare();
                 mp.start();
 
-            } catch (Exception e) {
+            } catch (Exception e)
+            {
                 Log.e("[AlarmService]", "Error encountered while starting alarm.\n" + e.getMessage());
             }
 

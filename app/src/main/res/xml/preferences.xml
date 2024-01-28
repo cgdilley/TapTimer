@@ -24,17 +24,39 @@
         app:title="@string/Pref_Feedback"
         app:summary="@string/Pref_FeedbackSummary"/>
 
-    <Preference
-        app:key="Pref_Ringtone"
-        app:title="@string/Pref_Ringtone"
-        app:summary="@string/Pref_RingtoneSummary"/>
+    <PreferenceCategory
+        app:key="PrefCat_Functional"
+        app:title="@string/PrefCat_Functional">
 
-    <SeekBarPreference
-        app:key="Pref_DoubleTapWindow"
-        app:title="@string/Pref_DoubleTapWindow"
-        app:summary="@string/Pref_DoubleTapWindowSummary"
-        android:defaultValue="500"
-        android:min="200"
-        android:max="2000"/>
+        <Preference
+            app:key="Pref_Ringtone"
+            app:title="@string/Pref_Ringtone"
+            app:summary="@string/Pref_RingtoneSummary"/>
+
+        <Preference
+            app:key="Pref_Notifications"
+            app:title="@string/Pref_Notifications"
+            app:summary="@string/Pref_NotificationsSummary"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        app:key="PrefCat_Nitpick"
+        app:title="@string/PrefCat_Nitpick">
+
+        <SeekBarPreference
+            app:key="Pref_DoubleTapWindow"
+            app:title="@string/Pref_DoubleTapWindow"
+            app:summary="@string/Pref_DoubleTapWindowSummary"
+            android:defaultValue="500"
+            android:min="200"
+            android:max="2000"/>
+
+        <CheckBoxPreference
+            app:key="Pref_AutoSave"
+            app:title="@string/Pref_AutoSave"
+            app:summary="@string/Pref_AutoSaveSummary"
+            android:defaultValue="true"/>
+
+    </PreferenceCategory>
 
 </PreferenceScreen>
