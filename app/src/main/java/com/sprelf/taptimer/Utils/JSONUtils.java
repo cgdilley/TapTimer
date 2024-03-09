@@ -36,7 +36,7 @@ import java.io.InputStreamReader;
  * Created by Chris on 15.11.2016.
  */
 
-public class JSONUtils
+public abstract class JSONUtils
 {
     /** Loads a JSON file at the given filepath in the app's file storage.  If no file is found,
      * reads from the same path in Assets directory instead.

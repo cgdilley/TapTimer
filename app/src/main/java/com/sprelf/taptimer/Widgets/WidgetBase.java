@@ -382,6 +382,7 @@ public abstract class WidgetBase extends AppWidgetProvider
         Intent intent = new Intent(c, this.getClass());
         intent.setAction(ACTION_ALARM_FIRE);
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId);
+        intent.addFlags(Intent.FLAG_RECEIVER_FOREGROUND);
         PendingIntent pendingIntent =
                 PendingIntent.getBroadcast(c, ALARM_REQUEST_CODE + widgetId, intent,
                                            PendingIntent.FLAG_IMMUTABLE);
@@ -389,7 +390,9 @@ public abstract class WidgetBase extends AppWidgetProvider
         // On versions of Android >= KitKat, sets an exact alarm.  Otherwise, sets an imprecise
         // alarm.
         AlarmManager alarmManager = (AlarmManager) c.getSystemService(Context.ALARM_SERVICE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, time, pendingIntent);
+        else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT)
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, time, pendingIntent);
         else
             alarmManager.set(AlarmManager.RTC_WAKEUP, time, pendingIntent);
@@ -426,7 +429,11 @@ public abstract class WidgetBase extends AppWidgetProvider
 
         // Start the alarm service
         Intent intent = new Intent(c, AlarmPlayService.class);
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//            c.startForegroundService(intent);
+//        } else {
         c.startService(intent);
+//        }
         Log.d("[WidgetBase]", "Attempting to start alarm.");
     }
 

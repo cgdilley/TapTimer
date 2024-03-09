@@ -24,7 +24,7 @@ import android.graphics.Color;
  * Created by Chris on 21.11.2016.
  */
 
-public class ColorUtils
+public abstract class ColorUtils
 {
 
     /**

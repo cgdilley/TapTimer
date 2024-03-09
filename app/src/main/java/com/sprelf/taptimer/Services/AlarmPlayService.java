@@ -32,16 +32,14 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.IBinder;
-import android.os.PowerManager;
+import android.util.Log;
+
+import com.sprelf.taptimer.R;
+import com.sprelf.taptimer.Utils.WakeLocker;
+import com.sprelf.taptimer.Widgets.TimerWidget;
 
 import androidx.core.app.NotificationCompat;
 import androidx.preference.PreferenceManager;
-
-import android.util.Log;
-import android.view.WindowManager;
-
-import com.sprelf.taptimer.R;
-import com.sprelf.taptimer.Widgets.TimerWidget;
 
 import static com.sprelf.taptimer.Widgets.WidgetBase.ACTION_ALARM_STOP;
 
@@ -75,9 +73,8 @@ public class AlarmPlayService extends Service
     public static final String WAKELOCK_TAG = "taptimer:ALARM_WAKELOCK";
 
     // Custom ASyncTask for handling loading and managing of alarm's MediaPlayer object
-    AudioTask task;
+    private AudioTask task;
 
-    PowerManager.WakeLock wakeLock;
 
     /**
      * @inheritDoc
@@ -85,11 +82,14 @@ public class AlarmPlayService extends Service
     @Override
     public int onStartCommand(Intent intent, int flags, int startId)
     {
+        Context c = getApplicationContext();
+
+        WakeLocker.acquire(c, WAKELOCK_TAG);
 
         // Initialize new audio task ASync object
         task = new AudioTask();
 
-        Uri alert = _getAlert(getApplicationContext());
+        Uri alert = _getAlert(c);
         // If somehow no ringtone was found, give up and stop
         if (alert == null)
         {
@@ -103,19 +103,19 @@ public class AlarmPlayService extends Service
             // Start the alarm asynchronously
             task.execute(alert);
 
-            // Acquire a WakeLock to keep the screen on while this service is running
-            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
-
-            wakeLock = pm.newWakeLock(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
-                                      PowerManager.ACQUIRE_CAUSES_WAKEUP, WAKELOCK_TAG);
-            if (wakeLock != null)
-                wakeLock.acquire(20000);
+//            // Acquire a WakeLock to keep the screen on while this service is running
+//            PowerManager pm = (PowerManager) getSystemService(Context.POWER_SERVICE);
+//
+//            wakeLock = pm.newWakeLock(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON |
+//                                      PowerManager.ACQUIRE_CAUSES_WAKEUP, WAKELOCK_TAG);
+//            if (wakeLock != null)
+//                wakeLock.acquire(20000);
 
             // Open the notification for dismissing the alarm
             openNotification(this);
         }
 
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     /**
@@ -131,8 +131,7 @@ public class AlarmPlayService extends Service
         task.cancel(true);
 
         // Release the wake lock
-        if (wakeLock != null)
-            wakeLock.release();
+        WakeLocker.release();
 
         // Close the persistent notification
         closeNotification(this);

@@ -8,8 +8,8 @@ android {
         applicationId "com.sprelf.taptimer"
         minSdkVersion 26
         targetSdkVersion 34
-        versionCode 8
-        versionName "1.00.02"
+        versionCode 9
+        versionName "1.00.03"
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
         vectorDrawables.useSupportLibrary = true
     }
